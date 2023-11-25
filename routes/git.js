@@ -15,7 +15,7 @@ const git = require('../services/git');
 /* POST programming language */
 router.post('/', async function(req, res, next) {
   try {
-    res.json(await git.process(req.body));
+    res.json(await git.processPREvent(req.body));
   } catch (err) {
     console.error(`Error while creating programming language`, err.message);
     next(err);
