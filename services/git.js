@@ -6,10 +6,10 @@ async function process(body){
 
    console.log('## type of body:', typeof body);
    console.log('## ');
-   console.log('## body',body);
+   console.log('## payload',body?.payload);
   console.log('## ');
 
-  console.log('## type of body:', typeof body);
+  console.log('## type of body.payload:', typeof body?.payload);
 
 
   //
