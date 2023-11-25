@@ -2,8 +2,8 @@ const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
 
-async function process(body){
-  console.log('## got process:', JSON.stringify(body,2));
+async function process({ payload }){
+  console.log('## got process for:', payload.action);
   // const result = await db.query(
   //   `INSERT INTO programming_languages
   //   (name, released_year, githut_rank, pypl_rank, tiobe_rank)
