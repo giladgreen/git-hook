@@ -11,3 +11,16 @@ async function query(sql, params) {
 module.exports = {
   query
 }
+
+
+//id: url
+//pr name
+//pr username
+//pr status
+//created_at
+//updated_at
+//deleted_at
+//reviewer username
+//reviewer status
+//reviewer updated_at
+

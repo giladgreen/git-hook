@@ -3,35 +3,45 @@ const helper = require('../helper');
 const config = require('../config');
 
 async function process(body){
-
-  //
   const { action, label, pull_request} = JSON.parse(body?.payload);
-  console.log('## got process for:', action);
-  console.log('## label:', label?.name);
-  console.log('## pull_request:', pull_request?.url);
-  console.log('## state:', pull_request?.state);
-  console.log('## title:', pull_request?.title);
-  console.log('## by:', pull_request?.user?.login);
+  let message = 'Error in process';
+  if (action === 'labeled' && label?.name === 'Ready to review'){
+    message = 'started processing'
+    const url = pull_request?.html_url;
+    const repo = url.includes('acs-schedule') ? 'acs-schedule':'schedule-service';
+    const parts = url.split('/');
+    const pr_number = Number(parts[parts.length-1]);
+    const prData = {
+      name: pull_request?.title,
+      creator: pull_request?.user?.login,
+      status: 'READY_TO_REVIEW' ,
+      // reviewer,
+      // review_status,
+      // review_last_updated,
+      repo,
+      pr_number
+    }
 
-  // const result = await db.query(
-  //   `INSERT INTO programming_languages
-  //   (name, released_year, githut_rank, pypl_rank, tiobe_rank)
-  //   VALUES
-  //   (?, ?, ?, ?, ?)`,
-  //   [
-  //     programmingLanguage.name, programmingLanguage.released_year,
-  //     programmingLanguage.githut_rank, programmingLanguage.pypl_rank,
-  //     programmingLanguage.tiobe_rank
-  //   ]
-  // );
-  //
-  // let message = 'Error in creating programming language';
-  //
-  // if (result.affectedRows) {
-  //   message = 'Programming language created successfully';
-  // }
 
-  return {body};
+    console.log('## got process:', prData);
+
+    const result = await db.query(
+        `INSERT INTO prs
+    (name, creator, status, repo, pr_number)
+    VALUES
+    (?, ?, ?, ?, ?)`,
+        [
+          prData.name, prData.creator, prData.status, prData.repo, prData.pr_number   ]
+    );
+
+    if (result.affectedRows) {
+      message = 'successfully added '+result.affectedRows+' new rows';
+    }
+  }
+
+  console.log('## message:', message);
+
+  return message;
 }
 
 module.exports = {
