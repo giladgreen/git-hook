@@ -2,14 +2,24 @@ const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
 
-async function process({ payload: { action, label, pull_request} }){
+async function process(body){
 
-  console.log('## got process for:', action);
-  console.log('## label:', label?.name);
-  console.log('## pull_request:', pull_request?.url);
-  console.log('## state:', pull_request?.state);
-  console.log('## title:', pull_request?.title);
-  console.log('## by:', pull_request?.user?.login);
+   console.log('## type of body:', typeof body);
+   console.log('## ');
+   console.log('## body',body);
+  console.log('## ');
+
+  console.log('## type of body:', typeof body);
+
+
+  //
+  // const { payload: { action, label, pull_request} } = body;
+  // console.log('## got process for:', action);
+  // console.log('## label:', label?.name);
+  // console.log('## pull_request:', pull_request?.url);
+  // console.log('## state:', pull_request?.state);
+  // console.log('## title:', pull_request?.title);
+  // console.log('## by:', pull_request?.user?.login);
 
   // const result = await db.query(
   //   `INSERT INTO programming_languages
