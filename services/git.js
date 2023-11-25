@@ -3,7 +3,7 @@ const helper = require('../helper');
 const config = require('../config');
 
 async function process(body){
-  console.log('## got process for:', body.action)
+  console.log('## got process:', JSON.stringify(body,2));
   // const result = await db.query(
   //   `INSERT INTO programming_languages
   //   (name, released_year, githut_rank, pypl_rank, tiobe_rank)
