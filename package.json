@@ -1,7 +1,7 @@
 {
-  "name": "programming-langugages-api",
+  "name": "hit-hook-api",
   "version": "1.0.0",
-  "description": "A demo REST API with Node.js Express.js and MySQL for most popular programming languages",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
