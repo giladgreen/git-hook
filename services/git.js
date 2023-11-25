@@ -4,22 +4,14 @@ const config = require('../config');
 
 async function process(body){
 
-   console.log('## type of body:', typeof body);
-   console.log('## ');
-   console.log('## payload',body?.payload);
-  console.log('## ');
-
-  console.log('## type of body.payload:', typeof body?.payload);
-
-
   //
-  // const { payload: { action, label, pull_request} } = body;
-  // console.log('## got process for:', action);
-  // console.log('## label:', label?.name);
-  // console.log('## pull_request:', pull_request?.url);
-  // console.log('## state:', pull_request?.state);
-  // console.log('## title:', pull_request?.title);
-  // console.log('## by:', pull_request?.user?.login);
+  const { action, label, pull_request} = JSON.parse(body?.payload);
+  console.log('## got process for:', action);
+  console.log('## label:', label?.name);
+  console.log('## pull_request:', pull_request?.url);
+  console.log('## state:', pull_request?.state);
+  console.log('## title:', pull_request?.title);
+  console.log('## by:', pull_request?.user?.login);
 
   // const result = await db.query(
   //   `INSERT INTO programming_languages
