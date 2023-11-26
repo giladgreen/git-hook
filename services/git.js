@@ -78,6 +78,8 @@ async function processPREvent(body){
   //let message = 'Error in process';
   if (action === 'labeled' && label?.name === 'Ready to review'){
     return await processReadyToReviewLabelAdded(pull_request);
+  } else if (action === 'unlabeled' && label?.name === 'Ready to review'){
+    return await processReadyToReviewLabelRemoved(pull_request)
   }
 
   console.log('## action:', action);
