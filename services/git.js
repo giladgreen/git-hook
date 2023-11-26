@@ -68,7 +68,7 @@ async function processReadyToReviewLabelRemoved(repo, prNumber) {
 
 async function processPREvent(body){
   const { action, label, pull_request} = JSON.parse(body?.payload);
-  const url = pr?.html_url;
+  const url = pull_request?.html_url;
   const repo = getRepo(url);
   const prNumber = getPRNumber(url);
   const creator = pull_request?.user?.login;
