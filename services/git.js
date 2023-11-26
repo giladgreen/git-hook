@@ -2,17 +2,16 @@ const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
 const { getName, getTags, getRepo, getPRNumber } = require("./helpers");
+const { sendSlackMessage } = require("./slack.util");
 
-async function processReadyToReviewLabelAdded(pr) {
-  const url = pr?.html_url;
-  const repo = getRepo(url);
-  const pr_number = getPRNumber(url);
+async function processReadyToReviewLabelAdded(repo, prNumber, creator) {
+
   const prData = {
     name: pr?.title,
-    creator: pr?.user?.login,
+    creator,
     status: 'READY_TO_REVIEW',
     repo,
-    pr_number
+    pr_number: prNumber
   }
 
   console.log('## received "ReadyToReview" Label Added event:', prData);
@@ -41,6 +40,9 @@ ${prUrl}
 `
     //TODO: send message to slack channel:
     console.log('slack message:', slackMessage);
+    const slackResponse = await sendSlackMessage(slackMessage);
+    console.log('slack response:', slackResponse);
+
 
     return message;
   } else {
@@ -50,14 +52,10 @@ ${prUrl}
   }
 }
 
-async function processReadyToReviewLabelRemoved(pr) {
-  const url = pr?.html_url;
-  const repo = getRepo(url);
-  const pr_number = getPRNumber(url);
-
+async function processReadyToReviewLabelRemoved(repo, prNumber) {
   const result = await db.query(
       `DELETE from prs WHERE repo=? AND pr_number=?`,
-      [repo, pr_number]
+      [repo, prNumber]
   );
 
   if (result.affectedRows) {
@@ -73,16 +71,19 @@ async function processReadyToReviewLabelRemoved(pr) {
 
 async function processPREvent(body){
   const { action, label, pull_request} = JSON.parse(body?.payload);
-  //let message = 'Error in process';
+  const url = pr?.html_url;
+  const repo = getRepo(url);
+  const prNumber = getPRNumber(url);
+  const creator = pull_request?.user?.login;
+
+  console.log('## action:', action, ' repo:', url,'  creator:', getName(creator));
+
   if (action === 'labeled' && label?.name === 'Ready to review'){
-    return await processReadyToReviewLabelAdded(pull_request);
-  } else if (action === 'unlabeled' && label?.name === 'Ready to review'){
-    return await processReadyToReviewLabelRemoved(pull_request)
+    return await processReadyToReviewLabelAdded(repo, prNumber, creator);
+  } else if (action === 'closed' || (action === 'unlabeled' && label?.name === 'Ready to review')){
+    return await processReadyToReviewLabelRemoved(repo, prNumber)
   }
 
-  console.log('## action:', action);
-  console.log('## label:', label);
-  console.log('## pull_request:', pull_request);
 
   return 'other event';
 }
