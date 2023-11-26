@@ -1,15 +1,14 @@
 const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
-const { getName, getTags } = require("./helpers");
+const { getName, getTags, getRepo, getPRNumber } = require("./helpers");
 
 async function processReadyToReviewLabelAdded(pr) {
   console.log('## processReadyToReviewLabelAdded:', pr);
 
   const url = pr?.html_url;
-  const repo = url.includes('acs-schedule') ? 'acs-schedule':'schedule-service';
-  const parts = url.split('/');
-  const pr_number = Number(parts[parts.length-1]);
+  const repo = getRepo(url);
+  const pr_number = getPRNumber(url);
   const prData = {
     name: pr?.title,
     creator: pr?.user?.login,
@@ -35,20 +34,40 @@ async function processReadyToReviewLabelAdded(pr) {
     const prCreator = getName(prData.creator);
     const prUrl = `https://git.autodesk.com/BIM360/${prData.repo}/pull/${prData.pr_number}`;
     const tags = getTags(prData.repo, prData.creator);
-    const slackMessage = `${tags}
+    const slackMessage = `
+${tags}
 ${prCreator} Has requested your review for this PR: 
 ${prUrl} 
 
 :pray:
 `
     //TODO: send message to slack channel:
-    console.log('slackMessage', slackMessage);
-
-
+    console.log('slack message:', slackMessage);
 
     return message;
   } else {
     const message = 'NO new rows added to DB!';
+    console.log(message);
+    return message;
+  }
+}
+
+async function processReadyToReviewLabelRemoved(pr) {
+  const url = pr?.html_url;
+  const repo = getRepo(url);
+  const pr_number = getPRNumber(url);
+
+  const result = await db.query(
+      `DELETE from prs WHERE repo=? AND pr_number=?`,
+      [repo, pr_number]
+  );
+
+  if (result.affectedRows) {
+    const message = 'row removed';
+    console.log(message);
+    return message;
+  } else {
+    const message = 'no rows removed';
     console.log(message);
     return message;
   }
