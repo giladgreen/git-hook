@@ -17,7 +17,7 @@ router.post('/', async function(req, res, next) {
   try {
     res.json(await git.processPREvent(req.body));
   } catch (err) {
-    console.error(`Error while creating programming language`, err.message);
+    console.error(`Error while processing request`, err.message);
     next(err);
   }
 });

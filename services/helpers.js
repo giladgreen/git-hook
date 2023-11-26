@@ -42,5 +42,8 @@ function getTags(repo, creator){
 }
 
 module.exports = {
-    getName
+    getName,
+    getRepo,
+    getPRNumber,
+    getTags
 }
