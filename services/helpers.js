@@ -33,10 +33,10 @@ function getName(username){
 
 function getTags(repo, creator){
     if (repo === SERVER_REPO){
-        return serverDevelopers.filter(item => item === creator).map(item => `@${getName(item)}`).join(', ');
+        return serverDevelopers.filter(item => item !== creator).map(item => `@${getName(item)}`).join(', ');
     }
     if (repo === CLIENT_REPO){
-        return clientDevelopers.filter(item => item === creator).map(item => `@${getName(item)}`).join(', ');
+        return clientDevelopers.filter(item => item !== creator).map(item => `@${getName(item)}`).join(', ');
     }
     return '@acs-schedule-fullstack-eng';
 }
