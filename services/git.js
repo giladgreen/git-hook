@@ -85,6 +85,12 @@ async function processPREvent(body){
   return 'other event';
 }
 
+async function checkForPendingPRs(){
+  console.log('## checkForPendingPRs');
+
+}
+
+setInterval(checkForPendingPRs, 60 * 1000)
 module.exports = {
   processPREvent
 }
