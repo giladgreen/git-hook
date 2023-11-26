@@ -27,7 +27,7 @@ const sendSlackMessage = async (message, c = null) => {
 
         const resp = await web.chat.postMessage({
             blocks: message,
-            channel: channelId,
+            channel,
         });
         console.log('# after send message, response:', resp)
 
