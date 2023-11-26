@@ -114,8 +114,8 @@ ${tags}
 Still waiting for a review on this PR..
 `;
 
-  console.log(id,' ## sending replay in thread: ', slackMessage, ' slack_message_id', slack_message_id)
-  return updateRow(id);
+  console.log(id,' ## sending replay in thread ')
+  return await updateRow(id);
 
 }
 async function checkForPendingPRs(){
