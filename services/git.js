@@ -1,6 +1,7 @@
 const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
+const { getName, getTags } = require("./helpers");
 
 async function processReadyToReviewLabelAdded(pr) {
   console.log('## processReadyToReviewLabelAdded:', pr);
@@ -31,6 +32,20 @@ async function processReadyToReviewLabelAdded(pr) {
   if (result.affectedRows) {
     const message = 'new row added to DB';
     console.log(message);
+    const prCreator = getName(prData.creator);
+    const prUrl = `https://git.autodesk.com/BIM360/${prData.repo}/pull/${prData.pr_number}`;
+    const tags = getTags(prData.repo, prData.creator);
+    const slackMessage = `${tags}
+${prCreator} Has requested your review for this PR: 
+${prUrl} 
+
+:pray:
+`
+    //TODO: send message to slack channel:
+    console.log('slackMessage', slackMessage);
+
+
+
     return message;
   } else {
     const message = 'NO new rows added to DB!';
