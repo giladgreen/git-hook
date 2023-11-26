@@ -5,24 +5,24 @@ const { getName, getTags, getRepo, getPRNumber } = require("./helpers");
 const { sendSlackMessage } = require("./slack.util");
 
 async function processReadyToReviewLabelAdded(repo, prNumber, creator) {
-
+  const tags = getTags(repo, creator);
   const prData = {
     name: pr?.title,
     creator,
-    status: 'READY_TO_REVIEW',
     repo,
-    pr_number: prNumber
+    pr_number: prNumber,
+    tags,
+    last_reminder: new Date()
   }
 
   console.log('## received "ReadyToReview" Label Added event:', prData);
 
   const result = await db.query(
       `INSERT INTO prs
-    (name, creator, status, repo, pr_number)
+    (name, creator, repo, pr_number, tags, last_reminder)
     VALUES
-    (?, ?, ?, ?, ?)`,
-      [
-        prData.name, prData.creator, prData.status, prData.repo, prData.pr_number   ]
+    (?, ?, ?, ?, ?, ?)`,
+      [prData.name, prData.creator, prData.repo, prData.pr_number, prData.tags,  prData.last_reminder ]
   );
 
   if (result.affectedRows) {
@@ -30,16 +30,17 @@ async function processReadyToReviewLabelAdded(repo, prNumber, creator) {
     console.log(message);
     const prCreator = getName(prData.creator);
     const prUrl = `https://git.autodesk.com/BIM360/${prData.repo}/pull/${prData.pr_number}`;
-    const tags = getTags(prData.repo, prData.creator);
+
     const slackMessage = `
 ${tags}
 ${prCreator} Has requested your review for this PR: 
 ${prUrl} 
 
 :pray:
-`
-    await sendSlackMessage(slackMessage);
+`;
 
+    await sendSlackMessage(slackMessage);
+//TODO: get the slack message id and save it with the db item
 
     return message;
   } else {
@@ -85,12 +86,59 @@ async function processPREvent(body){
   return 'other event';
 }
 
-async function checkForPendingPRs(){
-  console.log('## checkForPendingPRs');
+async function updateRow(id){
+  const result = await db.query(
+      `UPDATE prs SET last_reminder=? WHERE id = ?`,
+      [
+          new Date(),
+        id
+      ]
+  );
+
+  if (result.affectedRows) {
+    const message = 'rows updated';
+    console.log(message);
+    return message;
+  } else {
+    const message = 'no rows updated';
+    console.log(message);
+    return message;
+  }
 
 }
+async function handleReminder({ id, tags, slack_message_id }){
+  //send a replay to the slack thread
 
-setInterval(checkForPendingPRs, 60 * 1000)
+  const slackMessage = `
+${tags}
+Still waiting for a review on this PR..
+`;
+
+  console.log(id,' ## sending replay in thread: ', slackMessage, ' slack_message_id', slack_message_id)
+  return updateRow(id);
+
+}
+async function checkForPendingPRs(){
+  console.log('## checkForPendingPRs');
+  //get all prs from DB, where the last_reminder is more then 1 hour ago,
+  //- remind about it again (maybe same tags in a thread)
+  const now = new Date();
+  const time = new Date(now.getTime() - (30 * 60 * 1000));
+  console.log('## now', now);
+  console.log('## time', time);
+  const rows = await db.query(
+      `SELECT id, tags, slack_message_id  FROM prs WHERE last_reminder < ?`,
+      [time]
+  );
+  const data = rows ?? [];
+  console.log('## found', rows.length, 'rows');
+  await Promise.all(data.map(prData =>{
+    return handleReminder(prData);
+  }))
+}
+
+setInterval(checkForPendingPRs, 120 * 1000);
+
 module.exports = {
   processPREvent
 }
