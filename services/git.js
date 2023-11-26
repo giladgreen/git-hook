@@ -38,10 +38,7 @@ ${prUrl}
 
 :pray:
 `
-    //TODO: send message to slack channel:
-    console.log('slack message:', slackMessage);
-    const slackResponse = await sendSlackMessage(slackMessage);
-    console.log('slack response:', slackResponse);
+    await sendSlackMessage(slackMessage);
 
 
     return message;

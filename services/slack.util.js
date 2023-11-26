@@ -7,25 +7,23 @@ const sendSlackMessage = async (message, c = null) => {
     const channel = c || process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
 
     try {
+        console.log('# try to  join channel:', channel)
         await web.conversations.join({
             channel: channel,
         });
+        console.log('# after try to  join channel:', channel)
+        console.log('# before try to send message: ', message,' to channel:', channel)
+
+        const resp = await web.chat.postMessage({
+            blocks: message,
+            channel: channelId,
+        });
+        console.log('# after send message, response:', resp)
+
+        return;
     } catch (e) {
-        console.error('# error trying to join channel:', e.message)
+        console.error('# error trying to join channel/send message:', e.message)
     }
-
-    return new Promise(async (resolve, reject) => {
-
-        try {
-            const resp = await web.chat.postMessage({
-                blocks: message,
-                channel: channelId,
-            });
-            return resolve(resp);
-        } catch (error) {
-            return resolve(error.message);
-        }
-    });
 };
 
 module.exports = {
