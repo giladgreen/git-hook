@@ -95,6 +95,7 @@ async function updateRow(id){
       ]
   );
 
+
   if (result.affectedRows) {
     const message = 'rows updated';
     console.log(message);
