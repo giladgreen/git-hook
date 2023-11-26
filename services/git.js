@@ -4,10 +4,10 @@ const config = require('../config');
 const { getName, getTags, getRepo, getPRNumber } = require("./helpers");
 const { sendSlackMessage } = require("./slack.util");
 
-async function processReadyToReviewLabelAdded(repo, prNumber, creator) {
+async function processReadyToReviewLabelAdded(title, repo, prNumber, creator) {
   const tags = getTags(repo, creator);
   const prData = {
-    name: pr?.title,
+    name:title,
     creator,
     repo,
     pr_number: prNumber,
@@ -73,11 +73,11 @@ async function processPREvent(body){
   const repo = getRepo(url);
   const prNumber = getPRNumber(url);
   const creator = pull_request?.user?.login;
-
+  const title = pull_request?.title;
   console.log('## action:', action, ' repo:', url,'  creator:', getName(creator));
 
   if (action === 'labeled' && label?.name === 'Ready to review'){
-    return await processReadyToReviewLabelAdded(repo, prNumber, creator);
+    return await processReadyToReviewLabelAdded(title, repo, prNumber, creator);
   } else if (action === 'closed' || (action === 'unlabeled' && label?.name === 'Ready to review')){
     return await processReadyToReviewLabelRemoved(repo, prNumber)
   }
