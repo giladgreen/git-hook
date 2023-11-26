@@ -4,8 +4,6 @@ const config = require('../config');
 const { getName, getTags, getRepo, getPRNumber } = require("./helpers");
 
 async function processReadyToReviewLabelAdded(pr) {
-  console.log('## processReadyToReviewLabelAdded:', pr);
-
   const url = pr?.html_url;
   const repo = getRepo(url);
   const pr_number = getPRNumber(url);
