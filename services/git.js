@@ -118,9 +118,15 @@ async function processPRApproved(repo, prNumber, approveUser){
       [repo, prNumber]
   ) ?? [];
   if (rows.length > 0) {
+    const id = rows[0].id;
     const messageId = rows[0].slack_message_id;
     await reactToSlackMessage(messageId, 'white_check_mark');
     await replayToSlackMessage(messageId, 'PR Approved by ' + getName(approveUser));
+    await db.query(
+        `DELETE from prs WHERE id=?`,
+        [id]
+    );
+
   }
 }
 
