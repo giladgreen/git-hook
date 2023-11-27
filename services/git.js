@@ -138,7 +138,7 @@ async function processPRChangeRequested(repo, prNumber, approveUser){
   if (rows.length > 0) {
     const messageId = rows[0].slack_message_id;
     const creator = rows[0].creator;
-    await reactToSlackMessage(messageId, 'eyes');
+    await reactToSlackMessage(messageId, 'x');
     await replayToSlackMessage(messageId, getTagName(creator) +',  ' + getTagName(approveUser) + ' has left you comments');
   }
 }
