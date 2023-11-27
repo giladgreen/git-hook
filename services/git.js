@@ -4,6 +4,7 @@ const config = require('../config');
 const { getName, getTags, getRepo, getPRNumber, getTagName } = require("./helpers");
 const { sendSlackMessage, deleteSlackMessage, replayToSlackMessage, reactToSlackMessage } = require("./slack.util");
 const HOUR = (60 * 60 * 1000);
+const DAY = 24 * HOUR;
 async function processReadyToReviewLabelAdded(title, repo, prNumber, creator) {
   const tags = getTags(repo, creator);
   const prData = {
@@ -231,7 +232,7 @@ async function checkForPendingPRs(){
     return;//non working hours
   }
 
-  const time = new Date(now.getTime() - (3 * HOUR));
+  const time = new Date(now.getTime() - DAY);
 
   const rows = await db.query(
       `SELECT id, tags, slack_message_id FROM prs WHERE last_reminder < ?`,
@@ -247,7 +248,7 @@ async function checkForPendingPRs(){
 
 checkForPendingPRs();
 
-setInterval(checkForPendingPRs, 15 * 60 * 1000);
+setInterval(checkForPendingPRs, 2 * HOUR);
 
 module.exports = {
   processPREvent
