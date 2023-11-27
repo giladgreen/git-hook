@@ -221,7 +221,7 @@ async function checkForPendingPRs(){
   //get all prs from DB, where the last_reminder is more then 1 hour ago,
   //- remind about it again (maybe same tags in a thread)
   const now = new Date();
-  const time = new Date(now.getTime() - HOUR);
+  const time = new Date(now.getTime() - (3 * HOUR));
 
   const rows = await db.query(
       `SELECT id, tags, slack_message_id FROM prs WHERE last_reminder < ?`,
@@ -235,7 +235,7 @@ async function checkForPendingPRs(){
   }))
 }
 
-setInterval(checkForPendingPRs, 5 * 60 * 1000);
+setInterval(checkForPendingPRs, 15 * 60 * 1000);
 
 module.exports = {
   processPREvent
