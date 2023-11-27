@@ -3,7 +3,7 @@ const helper = require('../helper');
 const config = require('../config');
 const { getName, getTags, getRepo, getPRNumber } = require("./helpers");
 const { sendSlackMessage, deleteSlackMessage, replayToSlackMessage } = require("./slack.util");
-
+const HOUR = (60 * 60 * 1000);
 async function processReadyToReviewLabelAdded(title, repo, prNumber, creator) {
   const tags = getTags(repo, creator);
   const prData = {
@@ -141,11 +141,11 @@ async function checkForPendingPRs(){
   //get all prs from DB, where the last_reminder is more then 1 hour ago,
   //- remind about it again (maybe same tags in a thread)
   const now = new Date();
-  const time = new Date(now.getTime() - (30 * 60 * 1000));
+  const time = new Date(now.getTime() - HOUR);
   console.log('## now', now);
   console.log('## time', time);
   const rows = await db.query(
-      `SELECT id, tags, slack_message_id  FROM prs WHERE last_reminder < ?`,
+      `SELECT id, tags, slack_message_id FROM prs WHERE last_reminder < ?`,
       [time]
   );
   const data = rows ?? [];
