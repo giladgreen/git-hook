@@ -1,7 +1,7 @@
 const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
-const { getName, getTags, getRepo, getPRNumber } = require("./helpers");
+const { getName, getTags, getRepo, getPRNumber, getTagName } = require("./helpers");
 const { sendSlackMessage, deleteSlackMessage, replayToSlackMessage, reactToSlackMessage } = require("./slack.util");
 const HOUR = (60 * 60 * 1000);
 async function processReadyToReviewLabelAdded(title, repo, prNumber, creator) {
@@ -123,6 +123,20 @@ async function processPRApproved(repo, prNumber, approveUser){
   }
 }
 
+async function processPRChangeRequested(repo, prNumber, approveUser){
+  console.log('## processPRChangeRequested' );
+  const rows = await db.query(
+      `SELECT id, slack_message_id, creator FROM prs WHERE repo = ? AND pr_number = ?`,
+      [repo, prNumber]
+  ) ?? [];
+  if (rows.length > 0) {
+    const messageId = rows[0].slack_message_id;
+    const creator = rows[0].creator;
+    await reactToSlackMessage(messageId, 'eyes');
+    await replayToSlackMessage(messageId, getTagName(creator) +', ' + getTagName(approveUser) + ' has left comments');
+  }
+}
+
 async function processPREvent(body){
   const { action, label, pull_request, review} = JSON.parse(body?.payload);
   const url = pull_request?.html_url;
@@ -147,6 +161,9 @@ async function processPREvent(body){
   if (action === 'submitted') {
     if (review.state === 'approved') {
       return await processPRApproved(repo, prNumber, review.user.login)
+    }
+    if (review.state === 'changes_requested') {
+      return await processPRChangeRequested(repo, prNumber, review.user.login)
     }
 
   }

@@ -58,5 +58,6 @@ module.exports = {
     getName,
     getRepo,
     getPRNumber,
-    getTags
+    getTags,
+    getTagName
 }
