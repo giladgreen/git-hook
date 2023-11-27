@@ -25,6 +25,8 @@ ${tags}
 ${prCreator} Has requested your review for this PR: 
 ${prUrl} 
 
+pr title: *${title}*
+
 :pray:
 `;
 
