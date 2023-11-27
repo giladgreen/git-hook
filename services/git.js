@@ -22,10 +22,11 @@ async function processReadyToReviewLabelAdded(title, repo, prNumber, creator) {
 
   const slackMessage = `
 ${tags}
-${prCreator} Has requested your review for this PR: 
+*${prCreator}* Has requested your review for this PR: 
 ${prUrl} 
 
-pr title: *${title}*
+PR title: *${title}*
+
 
 :pray:
 `;
