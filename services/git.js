@@ -32,7 +32,6 @@ PR title: *${title}*
 `;
 
   const messageId = await sendSlackMessage(slackMessage);
-  await reactToSlackMessage(messageId, 'pray');
 
   const result = await db.query(
       `INSERT INTO prs
