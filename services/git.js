@@ -243,7 +243,7 @@ async function checkForPendingPRs(){
     return handleReminder(prData);
   }))
 }
-
+checkForPendingPRs();
 setInterval(checkForPendingPRs, 15 * 60 * 1000);
 
 module.exports = {
