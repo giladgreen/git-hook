@@ -12,14 +12,7 @@ app.use(
   })
 );
 
-async function test(){
-  const messageId = await sendSlackMessage('message body');
-  await replayToSlackMessage(messageId, 'reply')
-  await reactToSlackMessage(messageId, 'thumbsup')
-}
-
 app.get('/', (req, res) => {
-  test()
   res.json({'message': 'Gilad: server is up'});
 })
 

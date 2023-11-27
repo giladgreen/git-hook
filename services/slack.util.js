@@ -23,8 +23,7 @@ const reactToSlackMessage = async (messageId, reaction,  c = null) => {
         await web.reactions.add({
             channel,
             ts: messageId,
-            // thread_ts: messageId,
-            // timestamp: messageId,
+            timestamp: messageId,
             name: reaction
         });
     } catch (e) {
@@ -50,11 +49,6 @@ const sendSlackMessage = async (message, c = null) => {
     const channel = c || process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
 
     try {
-        console.log('# try to  join channel:', channel)
-        await web.conversations.join({
-            channel: channel,
-        });
-        console.log('# after try to  join channel:', channel)
         console.log('# before try to send message: ', message,' to channel:', channel)
 
         const resp = await web.chat.postMessage({
