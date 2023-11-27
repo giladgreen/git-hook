@@ -1,6 +1,17 @@
 const SERVER_REPO = 'schedule-service';
 const CLIENT_REPO = 'acs-schedule';
 
+const userNameToName = {
+    greeng: 'Gilad Green',
+    maltzmb: 'Bar Maltzman',
+    zlufl: 'Liron Zluf',
+    erlicho: 'Odiya Erlichster',
+    tchizid:  'Dor Tchizik',
+    levin: 'Nir Levi',
+    nadivr:'Raviv Nadiv',
+    renovate: 'Renovate Bot'
+}
+
 const userNameToId = {
     greeng: 'U93GVQANN',// 'Gilad Green',
     maltzmb: 'U04QT8537HA',//'Bar Maltzman',
@@ -25,16 +36,20 @@ function getPRNumber(url){
 
 
 function getName(username){
+    return userNameToName[username];
+}
+
+function getTagName(username){
     return userNameToId[username];
 }
 
 
 function getTags(repo, creator){
     if (repo === SERVER_REPO){
-        return serverDevelopers.filter(item => item !== creator).map(item => `<@${getName(item)}>`).join(', ');
+        return serverDevelopers.filter(item => item !== creator).map(item => `<@${getTagName(item)}>`).join(', ');
     }
     if (repo === CLIENT_REPO){
-        return clientDevelopers.filter(item => item !== creator).map(item => `<@${getName(item)}>`).join(', ');
+        return clientDevelopers.filter(item => item !== creator).map(item => `<@${getTagName(item)}>`).join(', ');
     }
     return '@acs-schedule-fullstack-eng';
 }

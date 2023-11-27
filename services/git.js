@@ -30,11 +30,6 @@ ${prUrl}
 
   const messageId = await sendSlackMessage(slackMessage);
 
-
-  setTimeout(()=>{
-    replayToSlackMessage(messageId, 'reply!!')
-  }, 20000)
-
   const result = await db.query(
       `INSERT INTO prs
     (name, creator, repo, pr_number, tags, last_reminder, slack_message_id)
