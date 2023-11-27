@@ -173,8 +173,7 @@ async function processPREvent(body){
   return 'other event';
 }
 
-
-
+///////////////////////////////////
 
 async function updateRow(id){
   const result = await db.query(
@@ -198,8 +197,6 @@ async function updateRow(id){
 
 }
 
-
-
 async function handleReminder({ id, tags, slack_message_id }){
   //send a replay to the slack thread
 
@@ -215,10 +212,7 @@ Still waiting for a review on this PR..
 
 }
 
-
 async function checkForPendingPRs(){
-
-
   //get all prs from DB, where the last_reminder is more then 1 hour ago,
   //- remind about it again (maybe same tags in a thread)
   const now = new Date();
@@ -229,7 +223,7 @@ async function checkForPendingPRs(){
   }
   const currentTime = now.getHours() + 4;
   if (currentTime < 8 || currentTime > 17) {
-    return;
+    return;//non working hours
   }
 
   const time = new Date(now.getTime() - (3 * HOUR));
@@ -245,7 +239,9 @@ async function checkForPendingPRs(){
     return handleReminder(prData);
   }))
 }
+
 checkForPendingPRs();
+
 setInterval(checkForPendingPRs, 15 * 60 * 1000);
 
 module.exports = {
