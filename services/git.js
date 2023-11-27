@@ -218,9 +218,18 @@ Still waiting for a review on this PR..
 
 async function checkForPendingPRs(){
 
+
   //get all prs from DB, where the last_reminder is more then 1 hour ago,
   //- remind about it again (maybe same tags in a thread)
   const now = new Date();
+
+  const currentDay = now.getDay();
+  if (currentDay >= 5){
+    return; //weekend
+  }
+  console.log('## current hour: ', now.getHours())
+
+
   const time = new Date(now.getTime() - (3 * HOUR));
 
   const rows = await db.query(
