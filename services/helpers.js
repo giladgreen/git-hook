@@ -20,9 +20,13 @@ const userNameToId = {
     tchizid: 'U011A594ARZ',// 'Dor Tchizik',
     levin: 'U41CXMEAG'//'Nir Levi',
 }
-
-const serverDevelopers = ['greeng','tchizid','levin'];
-const clientDevelopers = ['greeng','maltzmb','erlicho','tchizid'];
+const date = new Date();
+const targetDate = new Date(2023,11,30);
+const lironIsInTheTeam = date <= targetDate;
+const serverDevelopers = ['greeng','zlufl','tchizid','levin'].filter(name => {
+    return name !== 'zlufl' || lironIsInTheTeam;
+});
+const clientDevelopers = ['greeng','maltzmb','erlicho','zlufl','tchizid'];
 
 function getRepo(url){
     return url.includes(CLIENT_REPO) ? CLIENT_REPO:SERVER_REPO;
