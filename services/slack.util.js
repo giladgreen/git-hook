@@ -1,6 +1,6 @@
 const { WebClient } = require('@slack/web-api');
 //const PR_CHANNEL = 'CRBDC5H6C'; (acs-schedule-eng)
-const PR_CHANNEL = 'C0679N7LHBP'; // (temp-bot-test)
+//const PR_CHANNEL = 'C0679N7LHBP'; // (temp-bot-test)
 const options = {};
 const web = new WebClient(process.env.SLACK_TOKEN, options);
 //

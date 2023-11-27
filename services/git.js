@@ -130,32 +130,32 @@ ${tags}
 Still waiting for a review on this PR..
 `;
 
-  replayToSlackMessage(slack_message_id, slackMessage)
+  await replayToSlackMessage(slack_message_id, slackMessage)
 
-  console.log(id,' ## sending replay in thread ')
+  console.log(id,' ## sending replay in thread ', slackMessage)
   return await updateRow(id);
 
 }
 async function checkForPendingPRs(){
-  console.log('## checkForPendingPRs');
+
   //get all prs from DB, where the last_reminder is more then 1 hour ago,
   //- remind about it again (maybe same tags in a thread)
   const now = new Date();
   const time = new Date(now.getTime() - HOUR);
-  console.log('## now', now);
-  console.log('## time', time);
+
   const rows = await db.query(
       `SELECT id, tags, slack_message_id FROM prs WHERE last_reminder < ?`,
       [time]
   );
   const data = rows ?? [];
-  console.log('## found', rows.length, 'rows');
+  console.log('## checkForPendingPRs found', rows.length, 'rows  ,time:', time);
+
   await Promise.all(data.map(prData =>{
     return handleReminder(prData);
   }))
 }
 
-setInterval(checkForPendingPRs, 120 * 1000);
+setInterval(checkForPendingPRs, 5 * 60 * 1000);
 
 module.exports = {
   processPREvent
