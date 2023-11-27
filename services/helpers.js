@@ -26,7 +26,9 @@ const lironIsInTheTeam = date <= targetDate;
 const serverDevelopers = ['greeng','zlufl','tchizid','levin'].filter(name => {
     return name !== 'zlufl' || lironIsInTheTeam;
 });
-const clientDevelopers = ['greeng','maltzmb','erlicho','zlufl','tchizid'];
+const clientDevelopers = ['greeng','maltzmb','erlicho','zlufl','tchizid'].filter(name => {
+    return name !== 'zlufl' || lironIsInTheTeam;
+});
 
 function getRepo(url){
     return url.includes(CLIENT_REPO) ? CLIENT_REPO:SERVER_REPO;
