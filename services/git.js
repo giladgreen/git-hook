@@ -2,7 +2,7 @@ const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
 const { getName, getTags, getRepo, getPRNumber } = require("./helpers");
-const { sendSlackMessage, deleteSlackMessage, replayToSlackMessage } = require("./slack.util");
+const { sendSlackMessage, deleteSlackMessage, replayToSlackMessage, reactToSlackMessage } = require("./slack.util");
 const HOUR = (60 * 60 * 1000);
 async function processReadyToReviewLabelAdded(title, repo, prNumber, creator) {
   const tags = getTags(repo, creator);
@@ -31,6 +31,7 @@ pr title: *${title}*
 `;
 
   const messageId = await sendSlackMessage(slackMessage);
+  await reactToSlackMessage(messageId, 'pray');
 
   const result = await db.query(
       `INSERT INTO prs
@@ -80,10 +81,50 @@ async function processReadyToReviewLabelRemoved(repo, prNumber) {
   return message;
 }
 
+async function processPRClosedRemoved(repo, prNumber) {
+  const rows = await db.query(
+      `SELECT id, slack_message_id FROM prs WHERE repo = ? AND pr_number = ?`,
+      [repo, prNumber]
+  ) ?? [];
+  if (rows.length > 0){
+    const row = rows[0];
+    const id = row.id;
+    const messageId = row.slack_message_id;
+    await replayToSlackMessage(messageId, 'PR Closed.');
+    const result = await db.query(
+        `DELETE from prs WHERE id=?`,
+        [id]
+    );
+    if (result.affectedRows) {
+      const message = 'row removed';
+      console.log(message);
+      return message;
+    } else {
+      const message = 'no rows removed';
+      console.log(message);
+      return message;
+    }
+  }
+  const message = 'no rows removed';
+  console.log(message);
+  return message;
+}
+
+async function processPRApproved(repo, prNumber, approveUser){
+  console.log('## processPRApproved' );
+  const rows = await db.query(
+      `SELECT id, slack_message_id FROM prs WHERE repo = ? AND pr_number = ?`,
+      [repo, prNumber]
+  ) ?? [];
+  if (rows.length > 0) {
+    const messageId = rows[0].slack_message_id;
+    await reactToSlackMessage(messageId, 'white_check_mark');
+    await replayToSlackMessage(messageId, 'PR Approved by ' + getName(approveUser));
+  }
+}
+
 async function processPREvent(body){
-  console.log('## body?.payload type : ', typeof body?.payload)
-  console.log('## body?.payload: ', body?.payload)
-  const { action, label, pull_request} = JSON.parse(body?.payload);
+  const { action, label, pull_request, review} = JSON.parse(body?.payload);
   const url = pull_request?.html_url;
   const repo = getRepo(url);
   const prNumber = getPRNumber(url);
@@ -91,15 +132,31 @@ async function processPREvent(body){
   const title = pull_request?.title;
   console.log('## action:', action, ' repo:', url,'  creator:', getName(creator));
 
-  if (action === 'labeled' && label?.name === 'Ready to review'){
+  if (action === 'labeled' && label?.name === 'Ready to review') {
     return await processReadyToReviewLabelAdded(title, repo, prNumber, creator);
-  } else if (action === 'closed' || (action === 'unlabeled' && label?.name === 'Ready to review')){
+  }
+
+  if (action === 'unlabeled' && label?.name === 'Ready to review') {
     return await processReadyToReviewLabelRemoved(repo, prNumber)
+  }
+
+  if (action === 'closed') {
+    return await processPRClosedRemoved(repo, prNumber)
+  }
+
+  if (action === 'submitted') {
+    if (review.state === 'approved') {
+      return await processPRApproved(repo, prNumber, review.user.login)
+    }
+
   }
 
 
   return 'other event';
 }
+
+
+
 
 async function updateRow(id){
   const result = await db.query(
@@ -122,6 +179,9 @@ async function updateRow(id){
   }
 
 }
+
+
+
 async function handleReminder({ id, tags, slack_message_id }){
   //send a replay to the slack thread
 
@@ -136,6 +196,8 @@ Still waiting for a review on this PR..
   return await updateRow(id);
 
 }
+
+
 async function checkForPendingPRs(){
 
   //get all prs from DB, where the last_reminder is more then 1 hour ago,

@@ -17,6 +17,20 @@ const replayToSlackMessage = async (messageId, message,  c = null) => {
         console.error('# error trying to reply message:', e.message)
     }
 }
+const reactToSlackMessage = async (messageId, reaction,  c = null) => {
+    const channel = c || process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+    try {
+        await web.reactions.add({
+            channel,
+            ts: messageId,
+            // thread_ts: messageId,
+            // timestamp: messageId,
+            name: reaction
+        });
+    } catch (e) {
+        console.error('# error trying to reply message:', e.message)
+    }
+}
 const deleteSlackMessage = async (messageId, c = null) => {
     const channel = c || process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
 
@@ -58,5 +72,6 @@ const sendSlackMessage = async (message, c = null) => {
 module.exports = {
     sendSlackMessage,
     deleteSlackMessage,
-    replayToSlackMessage
+    replayToSlackMessage,
+    reactToSlackMessage
 }
