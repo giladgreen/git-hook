@@ -227,8 +227,10 @@ async function checkForPendingPRs(){
   if (currentDay >= 5){
     return; //weekend
   }
-  console.log('## current hour: ', now.getHours())
-
+  const cuurentTime = now.getHours() + 4;
+  if (cuurentTime < 8 || cuurentTime > 17){
+    return;
+  }
 
   const time = new Date(now.getTime() - (3 * HOUR));
 
