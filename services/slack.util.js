@@ -1,19 +1,8 @@
-// const { WebClient } = require('@slack/web-api');
+const { WebClient } = require('@slack/web-api');
 const PR_CHANNEL = 'acs-schedule-eng'
 const options = {};
-// const web = new WebClient(process.env.SLACK_TOKEN, options);
-const web = {
-    conversations:{
-        join: (props)=>{
-            console.log('@@ join:', props)
-        }
-    },
-    chat: {
-        postMessage: (props)=>{
-            console.log('@@ postMessage:', props)
-        }
-    }
-}
+const web = new WebClient(process.env.SLACK_TOKEN, options);
+
 const sendSlackMessage = async (message, c = null) => {
     const channel = c || process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
 
