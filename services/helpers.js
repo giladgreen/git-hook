@@ -40,16 +40,15 @@ function getName(username){
 }
 
 function getTagName(username){
-    return userNameToId[username];
+    return `<@${userNameToId[username]}>` ;
 }
-
 
 function getTags(repo, creator){
     if (repo === SERVER_REPO){
-        return serverDevelopers.filter(item => item !== creator).map(item => `<@${getTagName(item)}>`).join(', ');
+        return serverDevelopers.filter(item => item !== creator).map(item => getTagName(item)).join(', ');
     }
     if (repo === CLIENT_REPO){
-        return clientDevelopers.filter(item => item !== creator).map(item => `<@${getTagName(item)}>`).join(', ');
+        return clientDevelopers.filter(item => item !== creator).map(item => getTagName(item)).join(', ');
     }
     return '@acs-schedule-fullstack-eng';
 }

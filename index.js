@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { sendSlackMessage, deleteSlackMessage } = require('./services/slack.util');
+const { sendSlackMessage,  replayToSlackMessage,  reactToSlackMessage } = require('./services/slack.util');
 const app = express();
 const port = process.env.PORT || 3000;
 const gitRouter = require('./routes/git');
@@ -12,7 +12,13 @@ app.use(
   })
 );
 
+// async function test(){
+//   const messageId = await sendSlackMessage('message body');
+//   await replayToSlackMessage(messageId, 'reply')
+//   await reactToSlackMessage(messageId, 'thumbsup')
+// }
 app.get('/', (req, res) => {
+  // test()
   res.json({'message': 'Gilad: server is up'});
 })
 
