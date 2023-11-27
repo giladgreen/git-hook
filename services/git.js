@@ -224,11 +224,11 @@ async function checkForPendingPRs(){
   const now = new Date();
 
   const currentDay = now.getDay();
-  if (currentDay >= 5){
+  if (currentDay >= 5) {
     return; //weekend
   }
-  const cuurentTime = now.getHours() + 4;
-  if (cuurentTime < 8 || cuurentTime > 17){
+  const currentTime = now.getHours() + 4;
+  if (currentTime < 8 || currentTime > 17) {
     return;
   }
 
