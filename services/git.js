@@ -22,14 +22,8 @@ async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, de
   const description = getDescription(desc);
   const prCreator = getName(creator);
   const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
-  const slackMessage = getSlackMessageForNewPR(tags, prCreator, prUrl, title);
+  const slackMessage = getSlackMessageForNewPR(tags, prCreator, prUrl, title, description);
   const messageId = await sendSlackMessage(slackMessage);
-  if (hasCustomDescription(description)) {
-    await replayToSlackMessage(messageId, `*PR Description:*
-     
-${description}`);
-  }
-
   await db.createPR(title, creator, repo, prNumber, tags, new Date(), messageId);
 }
 

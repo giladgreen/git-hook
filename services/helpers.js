@@ -61,23 +61,32 @@ function getTags(repo, creator){
     return '@acs-schedule-fullstack-eng';
 }
 
-function getDescription(fullDescription){
-    return fullDescription.split('## Risk and Impact Analysis')[0].trim();
-}
-
 function hasCustomDescription(description) {
     return !description.includes('<!--- Provide a general summary of your changes in the Title above. Prefix this with JIRA ticket id  -->');
 }
-function getSlackMessageForNewPR(tags, prCreator, prUrl, title) {
+
+function getDescription(fullDescription){
+    if (!fullDescription) {
+        return null;
+    }
+    const description = fullDescription.split('## Risk and Impact Analysis')[0].trim();
+
+    return hasCustomDescription(description) ? `*PR Description:*
+${description}` : null;
+}
+
+
+function getSlackMessageForNewPR(tags, prCreator, prUrl, title, description) {
     return `
 ${tags}
 *${prCreator}* Has requested your review for this PR: 
 ${prUrl} 
 
-PR title: *${title}*
+*PR Title:* 
+${title}
 
+${description ? description : ''}
 
-:pray:
 `;
 }
 
