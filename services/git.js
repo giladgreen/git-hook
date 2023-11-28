@@ -39,6 +39,7 @@ PR title: *${title}*
 ${description}`)
   }
 
+
   const result = await db.query(
       `INSERT INTO prs
     (name, creator, repo, pr_number, tags, last_reminder, slack_message_id)
