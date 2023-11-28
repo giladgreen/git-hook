@@ -1,5 +1,7 @@
 const SERVER_REPO = 'schedule-service';
 const CLIENT_REPO = 'acs-schedule';
+const HOUR = (60 * 60 * 1000);
+const DAY = 24 * HOUR;
 
 const userNameToName = {
     greeng: 'Gilad Green',
@@ -59,10 +61,36 @@ function getTags(repo, creator){
     return '@acs-schedule-fullstack-eng';
 }
 
+function getDescription(fullDescription){
+    return fullDescription.split('## Risk and Impact Analysis')[0].trim();
+}
+
+function hasCustomDescription(description) {
+    return !description.includes('<!--- Provide a general summary of your changes in the Title above. Prefix this with JIRA ticket id  -->');
+}
+function getSlackMessageForNewPR(tags, prCreator, prUrl, title) {
+    return `
+${tags}
+*${prCreator}* Has requested your review for this PR: 
+${prUrl} 
+
+PR title: *${title}*
+
+
+:pray:
+`;
+}
+
+
 module.exports = {
     getName,
     getRepo,
     getPRNumber,
     getTags,
-    getTagName
+    getTagName,
+    getDescription,
+    hasCustomDescription,
+    getSlackMessageForNewPR,
+    HOUR,
+    DAY
 }
