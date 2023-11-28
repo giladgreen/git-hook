@@ -43,7 +43,7 @@ async function updatePrLastReminder(prId) {
 }
 
 async function getOldPRs() {
-  const time = new Date(now.getTime() - DAY);
+  const time = new Date((new Date()).getTime() - DAY);
 
   return await query(
       `SELECT id, tags, slack_message_id FROM prs WHERE last_reminder < ?`,
