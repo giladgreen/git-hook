@@ -34,7 +34,7 @@ const clientDevelopers = ['greeng','maltzmb','erlicho','zlufl','tchizid'].filter
 });
 
 function getRepo(url){
-    return url.includes(CLIENT_REPO) ? CLIENT_REPO: url.includes(SERVER_REPO) ? SERVER_REPO : PLAN_REPO ;
+    return url.includes(CLIENT_REPO) ? CLIENT_REPO: (url.includes(SERVER_REPO) ? SERVER_REPO : PLAN_REPO);
 }
 
 
