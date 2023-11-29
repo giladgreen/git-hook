@@ -11,7 +11,8 @@ app.use(
     extended: true,
   })
 );
-
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 app.get('/', (req, res) => {
   res.json({'message': 'Gilad: server is up'});
 })
