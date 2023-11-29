@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { sendSlackMessage,  replayToSlackMessage,  reactToSlackMessage } = require('./services/slack.util');
 const app = express();
 const port = process.env.PORT || 3000;
 const gitRouter = require('./routes/git');
