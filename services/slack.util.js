@@ -38,8 +38,6 @@ const deleteSlackMessage = async (messageId, c = null) => {
             channel,
             ts: messageId
         });
-        console.log('# after delete message:')
-
     } catch (e) {
         console.error('# error trying to delete message:', e.message)
     }
@@ -49,14 +47,10 @@ const sendSlackMessage = async (message, c = null) => {
     const channel = c || process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
 
     try {
-        console.log('# before try to send message: ', message,' to channel:', channel)
-
         const resp = await web.chat.postMessage({
             text: message,
             channel,
         });
-        console.log('# after send message, response:', resp)
-
         return resp.ts;
     } catch (e) {
         console.error('# error trying to join channel/send message:', e.message)

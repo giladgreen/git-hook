@@ -59,7 +59,7 @@ function getTags(repo, creator){
     if (repo === CLIENT_REPO){
         return clientDevelopers.filter(item => item !== creator).map(item => getTagName(item)).join(', ');
     }
-    return '@acs-schedule-fullstack-eng';
+    return '<@acs-schedule-fullstack-eng>';
 }
 
 function hasCustomDescription(description) {

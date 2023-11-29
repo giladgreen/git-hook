@@ -64,7 +64,8 @@ async function processPRChangeRequested(repo, prNumber, approveUser) {
     const messageId = pr.slack_message_id;
     const creator = pr.creator;
     await reactToSlackMessage(messageId, 'x');
-    await replayToSlackMessage(messageId, getTagName(creator) +',  ' + getTagName(approveUser) + ' has left you comments');
+    const meesage = `${getTagName(creator)},  ${getTagName(approveUser)} has left you comments`;
+    await replayToSlackMessage(messageId, meesage);
   }
 }
 
