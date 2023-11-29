@@ -1,5 +1,6 @@
 const SERVER_REPO = 'schedule-service';
 const CLIENT_REPO = 'acs-schedule';
+const PLAN_REPO = 'plan-classic-web';
 const HOUR = (60 * 60 * 1000);
 const DAY = 24 * HOUR;
 
@@ -52,7 +53,7 @@ function getTagName(username){
 }
 
 function getTags(repo, creator){
-    if (repo === SERVER_REPO){
+    if (repo === SERVER_REPO || repo === PLAN_REPO){
         return serverDevelopers.filter(item => item !== creator).map(item => getTagName(item)).join(', ');
     }
     if (repo === CLIENT_REPO){
@@ -71,8 +72,10 @@ function getDescription(fullDescription){
     }
     const description = fullDescription.split('## Risk and Impact Analysis')[0].trim();
 
-    return hasCustomDescription(description) ? `*PR Description:*
+    const result =  hasCustomDescription(description) ? `*PR Description:*
 ${description}` : null;
+
+    return result;
 }
 
 
