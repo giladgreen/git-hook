@@ -104,6 +104,9 @@ async function processPREvent(body) {
   return 'other event';
 }
 
+async function returnAllPRs(){
+  return await db.getAllPRs();
+}
 ///////////////////////////////////
 
 async function updateRow(id) {
@@ -148,5 +151,6 @@ checkForPendingPRs();
 setInterval(checkForPendingPRs, 2 * HOUR);
 
 module.exports = {
-  processPREvent
+  processPREvent,
+  returnAllPRs
 }

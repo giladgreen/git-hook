@@ -11,4 +11,13 @@ router.post('/', async function(req, res, next) {
   }
 });
 
+router.get('/', async function(req, res, next) {
+  try {
+    res.json(await git.returnAllPRs());
+  } catch (err) {
+    console.error(`Error while processing request`, err.message);
+    next(err);
+  }
+});
+
 module.exports = router;

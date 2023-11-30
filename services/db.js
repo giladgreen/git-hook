@@ -51,11 +51,15 @@ async function getOldPRs() {
   );
 }
 
+async function getAllPRs() {
+  return await query('SELECT * FROM prs', []);
+}
+
 module.exports = {
-  query,
   createPR,
   getPR,
   deletePR,
   updatePrLastReminder,
-  getOldPRs
+  getOldPRs,
+  getAllPRs
 }
