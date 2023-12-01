@@ -47,18 +47,18 @@ async function processPRClosedRemoved(repo, prNumber) {
   }
 }
 
-async function processPRApproved(repo, prNumber, approveUser, reviewBody, title, creator, desc) {
+async function processPRApproved(repo, prNumber, approveUser, reviewBody, desc) {
   const pr = await db.getPR(repo, prNumber);
   if (pr) {
-
+    const creator = pr.creator;
     const tags = getTagName(creator);
     const description = getDescription(desc);
     const prCreator = getName(creator);
     const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
-    const slackMessageWithoutTags = getSlackMessageForNewPR(tags, prCreator, prUrl, title, description);
+    const slackMessageWithoutNewTags = getSlackMessageForNewPR(tags, prCreator, prUrl, pr.name, description);
     const id = pr.id;
     const messageId = pr.slack_message_id;
-    await updateSlackMessage(messageId, slackMessageWithoutTags);
+    await updateSlackMessage(messageId, slackMessageWithoutNewTags);
     await reactToSlackMessage(messageId, 'white_check_mark');
 
     await replayToSlackMessage(messageId, `PR Approved by ${getName(approveUser)}`);
@@ -70,13 +70,22 @@ async function processPRApproved(repo, prNumber, approveUser, reviewBody, title,
   }
 }
 
-async function processPRChangeRequested(repo, prNumber, approveUser, reviewBody) {
+async function processPRChangeRequested(repo, prNumber, approveUser, reviewBody, desc) {
   const pr = await db.getPR(repo, prNumber);
   if (pr) {
-    const messageId = pr.slack_message_id;
     const creator = pr.creator;
+    const tags = getTagName(creator);
+    const description = getDescription(desc);
+    const prCreator = getName(creator);
+    const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
+    const slackMessageWithoutNewTags = getSlackMessageForNewPR(tags, prCreator, prUrl, pr.name, description);
+
+    const messageId = pr.slack_message_id;
+
+    await updateSlackMessage(messageId, slackMessageWithoutNewTags);
+
     await reactToSlackMessage(messageId, 'x');
-    //const meesage = `${getTagName(creator)},  ${getTagName(approveUser)} has left you comments`;
+
     await replayToSlackMessage(messageId, `${getTagName(creator)},  ${getTagName(approveUser)} has requested changes`);
     if (reviewBody){
       await replayToSlackMessage(messageId, reviewBody);
@@ -84,11 +93,17 @@ async function processPRChangeRequested(repo, prNumber, approveUser, reviewBody)
   }
 }
 
-async function processPRCommented(repo, prNumber, approveUser, reviewBody) {
+async function processPRCommented(repo, prNumber, approveUser, reviewBody, desc) {
   const pr = await db.getPR(repo, prNumber);
   if (pr) {
-    const messageId = pr.slack_message_id;
     const creator = pr.creator;
+    const messageId = pr.slack_message_id;
+    const tags = getTagName(creator);
+    const description = getDescription(desc);
+    const prCreator = getName(creator);
+    const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
+    const slackMessageWithoutNewTags = getSlackMessageForNewPR(tags, prCreator, prUrl, pr.name, description);
+    await updateSlackMessage(messageId, slackMessageWithoutNewTags);
     await reactToSlackMessage(messageId, 'eye2');
     await replayToSlackMessage(messageId, `${getTagName(creator)},  ${getTagName(approveUser)} has left you comments`);
     if (reviewBody) {
@@ -121,14 +136,14 @@ async function processPREvent(body) {
 
   if (action === 'submitted') {
     if (review.state === 'approved') {
-      return await processPRApproved(repo, prNumber, review?.user?.login, review?.body, title, creator, desc);
+      return await processPRApproved(repo, prNumber, review?.user?.login, review?.body, desc);
     }
     if (review.state === 'changes_requested') {
-      return await processPRChangeRequested(repo, prNumber, review?.user?.login, review?.body);
+      return await processPRChangeRequested(repo, prNumber, review?.user?.login, review?.body, desc);
     }
 
     if (review.state === 'commented') {
-      return await processPRCommented(repo, prNumber, review?.user?.login, review?.body);
+      return await processPRCommented(repo, prNumber, review?.user?.login, review?.body, desc);
     }
 
   }

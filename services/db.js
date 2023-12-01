@@ -21,7 +21,7 @@ async function createPR(name, creator, repo, pr_number, tags,  last_reminder, me
 
 async function getPR(repo, prNumber) {
   const results = await query(
-      `SELECT id, slack_message_id FROM prs WHERE repo = ? AND pr_number = ?`,
+      `SELECT id, slack_message_id, creator, name FROM prs WHERE repo = ? AND pr_number = ?`,
       [repo, prNumber]
   ) ?? [];
 
