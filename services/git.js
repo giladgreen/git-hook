@@ -43,71 +43,51 @@ async function processPRClosedRemoved(repo, prNumber) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
     await replayToSlackMessage(messageId, 'PR Closed.');
-    await db.deletePR(id);
+    await db.deletePR(id);   //TODO: maybe keep the row in the DB but dont fetch it anymore
   }
 }
 
-async function processPRApproved(repo, prNumber, approveUser, reviewBody, desc) {
+const reactions = {
+  approved: 'white_check_mark',
+  changes_requested: 'x',
+  commented: 'eye2'
+}
+function getReactionMessage(creator, approveUser, reactionType){
+  if (reactionType === 'approved') {
+    return `PR Approved by ${getName(approveUser)}`;
+  }
+
+  if (reactionType === 'changes_requested') {
+    return `${getTagName(creator)},  ${getTagName(approveUser)} has requested changes`;
+  }
+
+  if (reactionType === 'commented') {
+    return `${getTagName(creator)},  ${getTagName(approveUser)} has left you comments`;
+  }
+
+  return '';
+}
+
+async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDesc, reactionType) {
   const pr = await db.getPR(repo, prNumber);
   if (pr) {
     const creator = pr.creator;
     const tags = getTagName(creator);
-    const description = getDescription(desc);
+    const description = getDescription(prDesc);
     const prCreator = getName(creator);
     const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
     const slackMessageWithoutNewTags = getSlackMessageForNewPR(tags, prCreator, prUrl, pr.name, description);
     const id = pr.id;
     const messageId = pr.slack_message_id;
     await updateSlackMessage(messageId, slackMessageWithoutNewTags);
-    await reactToSlackMessage(messageId, 'white_check_mark');
-
-    await replayToSlackMessage(messageId, `PR Approved by ${getName(approveUser)}`);
-    if (reviewBody && reviewBody.length > 0){
-      await replayToSlackMessage(messageId, reviewBody);
+    await reactToSlackMessage(messageId, reactions[reactionType]);
+    const message = getReactionMessage(creator, approveUser, reactionType);
+    await replayToSlackMessage(messageId, message);
+    if (reactionBody && reactionBody.length > 0){
+      await replayToSlackMessage(messageId, reactionBody);
     }
-
-    await db.deletePR(id);
-  }
-}
-
-async function processPRChangeRequested(repo, prNumber, approveUser, reviewBody, desc) {
-  const pr = await db.getPR(repo, prNumber);
-  if (pr) {
-    const creator = pr.creator;
-    const tags = getTagName(creator);
-    const description = getDescription(desc);
-    const prCreator = getName(creator);
-    const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
-    const slackMessageWithoutNewTags = getSlackMessageForNewPR(tags, prCreator, prUrl, pr.name, description);
-
-    const messageId = pr.slack_message_id;
-
-    await updateSlackMessage(messageId, slackMessageWithoutNewTags);
-
-    await reactToSlackMessage(messageId, 'x');
-
-    await replayToSlackMessage(messageId, `${getTagName(creator)},  ${getTagName(approveUser)} has requested changes`);
-    if (reviewBody){
-      await replayToSlackMessage(messageId, reviewBody);
-    }
-  }
-}
-
-async function processPRCommented(repo, prNumber, approveUser, reviewBody, desc) {
-  const pr = await db.getPR(repo, prNumber);
-  if (pr) {
-    const creator = pr.creator;
-    const messageId = pr.slack_message_id;
-    const tags = getTagName(creator);
-    const description = getDescription(desc);
-    const prCreator = getName(creator);
-    const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
-    const slackMessageWithoutNewTags = getSlackMessageForNewPR(tags, prCreator, prUrl, pr.name, description);
-    await updateSlackMessage(messageId, slackMessageWithoutNewTags);
-    await reactToSlackMessage(messageId, 'eye2');
-    await replayToSlackMessage(messageId, `${getTagName(creator)},  ${getTagName(approveUser)} has left you comments`);
-    if (reviewBody) {
-      await replayToSlackMessage(messageId, reviewBody);
+    if (reactionType === 'approved') {
+      await db.deletePR(id);
     }
   }
 }
@@ -135,17 +115,7 @@ async function processPREvent(body) {
   }
 
   if (action === 'submitted') {
-    if (review.state === 'approved') {
-      return await processPRApproved(repo, prNumber, review?.user?.login, review?.body, desc);
-    }
-    if (review.state === 'changes_requested') {
-      return await processPRChangeRequested(repo, prNumber, review?.user?.login, review?.body, desc);
-    }
-
-    if (review.state === 'commented') {
-      return await processPRCommented(repo, prNumber, review?.user?.login, review?.body, desc);
-    }
-
+    return await processPRReacted(repo, prNumber, review?.user?.login, review?.body, desc, review.state);
   }
 
   return 'other event';
