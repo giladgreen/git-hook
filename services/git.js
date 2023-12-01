@@ -85,7 +85,7 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
     const message = getReactionMessage(creator, reactedUser, reactionType);
     await replayToSlackMessage(messageId, message);
     if (reactionBody && reactionBody.length > 0){
-      await replayToSlackMessage(messageId, reactionBody);
+      await replayToSlackMessage(messageId,`*${getName(reactedUser)}:* ${reactionBody}`);
     }
     if (reactionType === 'approved') {
       await removeReactToSlackMessage(messageId, 'x');
