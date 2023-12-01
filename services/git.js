@@ -9,12 +9,12 @@ const {
   getTagName,
   getDescription,
   getSlackMessageForNewPR,
-  hasCustomDescription,
   HOUR } = require("./helpers");
 const {
   sendSlackMessage,
   deleteSlackMessage,
   replayToSlackMessage,
+  updateSlackMessage,
   reactToSlackMessage } = require("./slack.util");
 
 async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc) {
@@ -47,25 +47,53 @@ async function processPRClosedRemoved(repo, prNumber) {
   }
 }
 
-async function processPRApproved(repo, prNumber, approveUser) {
+async function processPRApproved(repo, prNumber, approveUser, reviewBody, title, creator, desc) {
   const pr = await db.getPR(repo, prNumber);
   if (pr) {
+
+    const tags = getTagName(creator);
+    const description = getDescription(desc);
+    const prCreator = getName(creator);
+    const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
+    const slackMessageWithoutTags = getSlackMessageForNewPR(tags, prCreator, prUrl, title, description);
     const id = pr.id;
     const messageId = pr.slack_message_id;
+    await updateSlackMessage(messageId, slackMessageWithoutTags);
     await reactToSlackMessage(messageId, 'white_check_mark');
-    await replayToSlackMessage(messageId, 'PR Approved by ' + getName(approveUser));
+
+    await replayToSlackMessage(messageId, `PR Approved by ${getName(approveUser)}`);
+    if (reviewBody && reviewBody.length > 0){
+      await replayToSlackMessage(messageId, reviewBody);
+    }
+
     await db.deletePR(id);
   }
 }
 
-async function processPRChangeRequested(repo, prNumber, approveUser) {
+async function processPRChangeRequested(repo, prNumber, approveUser, reviewBody) {
   const pr = await db.getPR(repo, prNumber);
   if (pr) {
     const messageId = pr.slack_message_id;
     const creator = pr.creator;
     await reactToSlackMessage(messageId, 'x');
-    const meesage = `${getTagName(creator)},  ${getTagName(approveUser)} has left you comments`;
-    await replayToSlackMessage(messageId, meesage);
+    //const meesage = `${getTagName(creator)},  ${getTagName(approveUser)} has left you comments`;
+    await replayToSlackMessage(messageId, `${getTagName(creator)},  ${getTagName(approveUser)} has requested changes`);
+    if (reviewBody){
+      await replayToSlackMessage(messageId, reviewBody);
+    }
+  }
+}
+
+async function processPRCommented(repo, prNumber, approveUser, reviewBody) {
+  const pr = await db.getPR(repo, prNumber);
+  if (pr) {
+    const messageId = pr.slack_message_id;
+    const creator = pr.creator;
+    await reactToSlackMessage(messageId, 'eye2');
+    await replayToSlackMessage(messageId, `${getTagName(creator)},  ${getTagName(approveUser)} has left you comments`);
+    if (reviewBody) {
+      await replayToSlackMessage(messageId, reviewBody);
+    }
   }
 }
 
@@ -93,10 +121,14 @@ async function processPREvent(body) {
 
   if (action === 'submitted') {
     if (review.state === 'approved') {
-      return await processPRApproved(repo, prNumber, review?.user?.login);
+      return await processPRApproved(repo, prNumber, review?.user?.login, review?.body, title, creator, desc);
     }
     if (review.state === 'changes_requested') {
-      return await processPRChangeRequested(repo, prNumber, review?.user?.login);
+      return await processPRChangeRequested(repo, prNumber, review?.user?.login, review?.body);
+    }
+
+    if (review.state === 'commented') {
+      return await processPRCommented(repo, prNumber, review?.user?.login, review?.body);
     }
 
   }

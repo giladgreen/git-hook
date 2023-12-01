@@ -4,8 +4,21 @@ const PR_CHANNEL = 'C0679N7LHBP'; // (temp-bot-test)
 const options = {};
 const web = new WebClient(process.env.SLACK_TOKEN, options);
 //
-const replayToSlackMessage = async (messageId, message,  c = null) => {
-    const channel = c || process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+const updateSlackMessage = async (messageId, message) => {
+    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+    try {
+        await web.chat.update({
+            channel,
+            ts: messageId,
+            text: message
+            // You could also use a blocks[] array to send richer content
+        });
+    } catch (e) {
+        console.error('# error trying to reply message:', e.message)
+    }
+}
+const replayToSlackMessage = async (messageId, message) => {
+    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
     try {
         await web.chat.postMessage({
             channel,
@@ -17,8 +30,8 @@ const replayToSlackMessage = async (messageId, message,  c = null) => {
         console.error('# error trying to reply message:', e.message)
     }
 }
-const reactToSlackMessage = async (messageId, reaction,  c = null) => {
-    const channel = c || process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+const reactToSlackMessage = async (messageId, reaction) => {
+    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
     try {
         await web.reactions.add({
             channel,
@@ -30,8 +43,8 @@ const reactToSlackMessage = async (messageId, reaction,  c = null) => {
         console.error('# error trying to reply message:', e.message)
     }
 }
-const deleteSlackMessage = async (messageId, c = null) => {
-    const channel = c || process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+const deleteSlackMessage = async (messageId) => {
+    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
 
     try {
         await web.chat.delete({
@@ -43,8 +56,8 @@ const deleteSlackMessage = async (messageId, c = null) => {
     }
 };
 
-const sendSlackMessage = async (message, c = null) => {
-    const channel = c || process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+const sendSlackMessage = async (message) => {
+    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
 
     try {
         const resp = await web.chat.postMessage({
@@ -61,5 +74,6 @@ module.exports = {
     sendSlackMessage,
     deleteSlackMessage,
     replayToSlackMessage,
-    reactToSlackMessage
+    reactToSlackMessage,
+    updateSlackMessage
 }
