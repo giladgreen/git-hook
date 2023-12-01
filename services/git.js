@@ -18,6 +18,7 @@ const {
   removeReactToSlackMessage,
   reactToSlackMessage } = require("./slack.util");
 
+
 async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc) {
   const tags = getTags(repo, creator);
   const description = getDescription(desc);
@@ -43,8 +44,13 @@ async function processPRClosed(repo, prNumber) {
   if (pr) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
-    if (pr.is_deleted){
+    if (pr.is_deleted) {
       await replayToSlackMessage(messageId, 'PR Merged.');
+      await reactToSlackMessage(messageId, 'done-stamp');
+      setTimeout(() => {
+        replayToSlackMessage(messageId, 'It is now (probably) in QA.');
+        reactToSlackMessage(messageId, 'heavy_check_mark');
+      }, HOUR);
     } else{
       await replayToSlackMessage(messageId, 'PR Closed.');
     }
