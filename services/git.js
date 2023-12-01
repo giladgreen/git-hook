@@ -81,7 +81,7 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
     const messageId = pr.slack_message_id;
     await updateSlackMessage(messageId, slackMessageWithoutNewTags);
     await reactToSlackMessage(messageId, reactions[reactionType]);
-    const message = getReactionMessage(creator, approveUser, reactionType);
+    const message = getReactionMessage(creator, reactedUser, reactionType);
     await replayToSlackMessage(messageId, message);
     if (reactionBody && reactionBody.length > 0){
       await replayToSlackMessage(messageId, reactionBody);
