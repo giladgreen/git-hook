@@ -21,11 +21,20 @@ async function createPR(name, creator, repo, pr_number, tags,  last_reminder, me
 
 async function getPR(repo, prNumber) {
   const results = await query(
-      `SELECT id, slack_message_id, creator, name FROM prs WHERE repo = ? AND pr_number = ?`,
+      `SELECT id, slack_message_id, creator, name, is_deleted FROM prs WHERE repo = ? AND pr_number = ?`,
       [repo, prNumber]
   ) ?? [];
 
   return results.length > 0 ? results[0] : null;
+}
+
+async function markPRasDelete(prId) {
+  await query(
+      `UPDATE prs SET is_deleted = true WHERE id = ?`,
+      [
+          prId
+      ]
+  );
 }
 
 async function deletePR(prId) {
@@ -46,7 +55,7 @@ async function getOldPRs() {
   const time = new Date((new Date()).getTime() - DAY);
 
   return await query(
-      `SELECT id, tags, slack_message_id FROM prs WHERE last_reminder < ?`,
+      `SELECT id, tags, slack_message_id FROM prs WHERE last_reminder < ? AND is_deleted IS NULL`,
       [time]
   );
 }
@@ -61,5 +70,6 @@ module.exports = {
   deletePR,
   updatePrLastReminder,
   getOldPRs,
-  getAllPRs
+  getAllPRs,
+  markPRasDelete
 }

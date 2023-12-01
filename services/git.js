@@ -38,13 +38,18 @@ async function processReadyToReviewLabelRemoved(repo, prNumber) {
   }
 }
 
-async function processPRClosedRemoved(repo, prNumber) {
+async function processPRClosed(repo, prNumber) {
   const pr = await db.getPR(repo, prNumber);
   if (pr) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
-    await replayToSlackMessage(messageId, 'PR Closed.');
-    await db.deletePR(id);   //TODO: maybe keep the row in the DB but dont fetch it anymore
+    if (pr.is_deleted){
+      await replayToSlackMessage(messageId, 'PR Merged.');
+    } else{
+      await replayToSlackMessage(messageId, 'PR Closed.');
+    }
+
+    await db.deletePR(id);
   }
 }
 
@@ -89,7 +94,7 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
     }
     if (reactionType === 'approved') {
       await removeReactToSlackMessage(messageId, 'x');
-      await db.deletePR(id);
+      await db.markPRasDelete(id);
     }
   }
 }
@@ -113,7 +118,7 @@ async function processPREvent(body) {
   }
 
   if (action === 'closed') {
-    return await processPRClosedRemoved(repo, prNumber);
+    return await processPRClosed(repo, prNumber);
   }
 
   if (action === 'submitted') {
