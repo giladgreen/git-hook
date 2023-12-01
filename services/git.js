@@ -15,6 +15,7 @@ const {
   deleteSlackMessage,
   replayToSlackMessage,
   updateSlackMessage,
+  removeReactToSlackMessage,
   reactToSlackMessage } = require("./slack.util");
 
 async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc) {
@@ -87,6 +88,7 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
       await replayToSlackMessage(messageId, reactionBody);
     }
     if (reactionType === 'approved') {
+      await removeReactToSlackMessage(messageId, 'x');
       await db.deletePR(id);
     }
   }

@@ -14,7 +14,7 @@ const updateSlackMessage = async (messageId, message) => {
             // You could also use a blocks[] array to send richer content
         });
     } catch (e) {
-        console.error('# error trying to reply message:', e.message)
+        console.error('# error trying to update message:', e.message)
     }
 }
 const replayToSlackMessage = async (messageId, message) => {
@@ -27,10 +27,23 @@ const replayToSlackMessage = async (messageId, message) => {
             // You could also use a blocks[] array to send richer content
         });
     } catch (e) {
-        console.error('# error trying to reply message:', e.message)
+        console.error('# error trying to reply to a message:', e.message)
     }
 }
 const reactToSlackMessage = async (messageId, reaction) => {
+    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+    try {
+        await web.reactions.remove({
+            channel,
+            ts: messageId,
+            timestamp: messageId,
+            name: reaction
+        });
+    } catch (e) {
+        console.error('# error trying to react to a message:', e.message)
+    }
+}
+const removeReactToSlackMessage = async (messageId, reaction) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
     try {
         await web.reactions.add({
@@ -40,7 +53,7 @@ const reactToSlackMessage = async (messageId, reaction) => {
             name: reaction
         });
     } catch (e) {
-        console.error('# error trying to reply message:', e.message)
+        console.error('# error trying to remove message reaction:', e.message)
     }
 }
 const deleteSlackMessage = async (messageId) => {
@@ -66,7 +79,7 @@ const sendSlackMessage = async (message) => {
         });
         return resp.ts;
     } catch (e) {
-        console.error('# error trying to join channel/send message:', e.message)
+        console.error('# error trying to send message:', e.message)
     }
 };
 
@@ -75,5 +88,6 @@ module.exports = {
     deleteSlackMessage,
     replayToSlackMessage,
     reactToSlackMessage,
-    updateSlackMessage
+    updateSlackMessage,
+    removeReactToSlackMessage
 }
