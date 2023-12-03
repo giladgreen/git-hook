@@ -66,15 +66,15 @@ const reactions = {
 }
 function getReactionMessage(creator, approveUser, reactionType){
   if (reactionType === 'approved') {
-    return `PR Approved by ${getName(approveUser)}`;
+    return `${getTagName(creator)}, ${getName(approveUser)} has approved your PR`;
   }
 
   if (reactionType === 'changes_requested') {
-    return `${getTagName(creator)},  ${getTagName(approveUser)} has requested changes`;
+    return `${getTagName(creator)},  ${getName(approveUser)} has requested changes`;
   }
 
   if (reactionType === 'commented') {
-    return `${getTagName(creator)},  ${getTagName(approveUser)} has left you comments`;
+    return `${getTagName(creator)},  ${getName(approveUser)} has left you comments`;
   }
 
   return '';
@@ -84,11 +84,10 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
   const pr = await db.getPR(repo, prNumber);
   if (pr) {
     const creator = pr.creator;
-    const tags = getTagName(creator);
     const description = getDescription(prDesc);
     const prCreator = getName(creator);
     const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
-    const slackMessageWithoutNewTags = getSlackMessageForNewPR(tags, prCreator, prUrl, pr.name, description);
+    const slackMessageWithoutNewTags = getSlackMessageForNewPR('', prCreator, prUrl, pr.name, description);
     const id = pr.id;
     const messageId = pr.slack_message_id;
     await updateSlackMessage(messageId, slackMessageWithoutNewTags);
