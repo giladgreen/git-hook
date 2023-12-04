@@ -29,7 +29,7 @@ const lironIsInTheTeam = date <= targetDate;
 const serverDevelopers = ['greeng','zlufl','tchizid','levin'].filter(name => {
     return name !== 'zlufl' || lironIsInTheTeam;
 });
-const clientDevelopers = ['greeng','maltzmb','erlicho','zlufl','tchizid'].filter(name => {
+const clientDevelopers = ['greeng','maltzmb','erlicho'].filter(name => {
     return name !== 'zlufl' || lironIsInTheTeam;
 });
 
