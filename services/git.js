@@ -77,7 +77,7 @@ function getReactionMessage(creator, approveUser, reactionType){
     if (creator !== approveUser) {
       return `${getTagName(creator)},  ${getName(approveUser)} has left you comments`;
     }
-    return `${getName(approveUser)} has addressed the comments`;
+    return `${getName(approveUser)} has added comments`;
   }
 
   return '';
