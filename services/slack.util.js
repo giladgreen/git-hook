@@ -33,7 +33,7 @@ const replayToSlackMessage = async (messageId, message) => {
 const reactToSlackMessage = async (messageId, reaction) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
     try {
-        await web.reactions.remove({
+        await web.reactions.add({
             channel,
             ts: messageId,
             timestamp: messageId,
@@ -46,7 +46,7 @@ const reactToSlackMessage = async (messageId, reaction) => {
 const removeReactToSlackMessage = async (messageId, reaction) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
     try {
-        await web.reactions.add({
+        await web.reactions.remove({
             channel,
             ts: messageId,
             timestamp: messageId,
