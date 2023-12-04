@@ -74,7 +74,10 @@ function getReactionMessage(creator, approveUser, reactionType){
   }
 
   if (reactionType === 'commented') {
-    return `${getTagName(creator)},  ${getName(approveUser)} has left you comments`;
+    if (creator !== approveUser) {
+      return `${getTagName(creator)},  ${getName(approveUser)} has left you comments`;
+    }
+    return `${getName(approveUser)} has addressed the comments`;
   }
 
   return '';
