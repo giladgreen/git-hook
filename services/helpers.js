@@ -26,7 +26,7 @@ const userNameToId = {
 const date = new Date();
 const targetDate = new Date(2023,11,30);
 const lironIsInTheTeam = date <= targetDate;
-const serverDevelopers = ['greeng','zlufl','tchizid','levin'].filter(name => {
+const serverDevelopers = ['greeng','tchizid','levin'].filter(name => {
     return name !== 'zlufl' || lironIsInTheTeam;
 });
 const clientDevelopers = ['greeng','maltzmb','erlicho'].filter(name => {
