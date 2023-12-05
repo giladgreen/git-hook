@@ -22,6 +22,7 @@ const userNameToId = {
     erlicho: 'U0275G55QQ0',//'Odiya Erlichster',
     tchizid: 'U011A594ARZ',// 'Dor Tchizik',
     levin: 'U41CXMEAG'//'Nir Levi',
+    //TODO: micha
 }
 
 const serverDevelopers = ['greeng','tchizid','levin'];

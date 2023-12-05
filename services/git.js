@@ -46,10 +46,10 @@ async function processPRClosed(repo, prNumber) {
     const messageId = pr.slack_message_id;
     if (pr.is_deleted) {
       await replayToSlackMessage(messageId, 'PR Merged.');
-      await reactToSlackMessage(messageId, 'done-stamp');
+      await reactToSlackMessage(messageId, 'white_check_mark');
       setTimeout(() => {
         replayToSlackMessage(messageId, 'It is now (probably) in QA.');
-        reactToSlackMessage(messageId, 'heavy_check_mark');
+        reactToSlackMessage(messageId, 'done-stamp');
       }, HOUR);
     } else{
       await replayToSlackMessage(messageId, 'PR Closed.');
@@ -60,7 +60,7 @@ async function processPRClosed(repo, prNumber) {
 }
 
 const reactions = {
-  approved: 'white_check_mark',
+  approved: 'approved-stamp',
   changes_requested: 'x',
   commented: 'eye2'
 }
