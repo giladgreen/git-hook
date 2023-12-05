@@ -60,7 +60,7 @@ async function processPRClosed(repo, prNumber) {
 }
 
 const reactions = {
-  approved: 'approved-stamp',
+  approved: 'approved_stamp',
   changes_requested: 'x',
   commented: 'eye2'
 }
