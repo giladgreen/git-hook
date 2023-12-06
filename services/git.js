@@ -2,6 +2,7 @@ const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
 const {
+  isOffTime,
   getName,
   getTags,
   getRepo,
@@ -9,7 +10,8 @@ const {
   getTagName,
   getDescription,
   getSlackMessageForNewPR,
-  HOUR } = require("./helpers");
+  HOUR,
+} = require("./helpers");
 const {
   sendSlackMessage,
   deleteSlackMessage,
@@ -157,15 +159,8 @@ This PR is still waiting for a review..
 }
 
 async function checkForPendingPRs() {
-  const now = new Date();
-  const currentDay = now.getDay();
-
-  if (currentDay >= 5) {
-    return; // weekend
-  }
-  const currentTime = now.getHours() + 4; //server timezone
-  if (currentTime < 8 || currentTime > 17) {
-    return; // non working hours
+  if (isOffTime()){
+    return;
   }
 
   const prs = (await db.getOldPRs()) ?? [];

@@ -88,8 +88,22 @@ ${description ? description : ''}
 `;
 }
 
+function isOffTime(){
+    const now = new Date();
+    const currentDay = now.getDay();
 
+    if (currentDay >= 5) {
+        return true;
+    }
+    const currentTime = now.getHours() + 4;
+    if (currentTime < 8 || currentTime > 17) {
+        return true;
+    }
+
+    return false;
+}
 module.exports = {
+    isOffTime,
     getName,
     getRepo,
     getPRNumber,

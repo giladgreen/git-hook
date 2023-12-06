@@ -1,9 +1,18 @@
 const { WebClient } = require('@slack/web-api');
+const { isOffTime } = require("./helpers");
 //const PR_CHANNEL = 'CRBDC5H6C'; (acs-schedule-eng)
 const PR_CHANNEL = 'C0679N7LHBP'; // (temp-bot-test)
 const options = {};
 const web = new WebClient(process.env.SLACK_TOKEN, options);
 //
+
+function getTommorrowPostTime(){
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(9, 0, 0);
+    return tomorrow.getTime() / 1000;
+}
+
 const updateSlackMessage = async (messageId, message) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
     try {
@@ -20,12 +29,20 @@ const updateSlackMessage = async (messageId, message) => {
 const replayToSlackMessage = async (messageId, message) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
     try {
-        await web.chat.postMessage({
-            channel,
-            thread_ts: messageId,
-            text: message
-            // You could also use a blocks[] array to send richer content
-        });
+        if (isOffTime()){
+            await  web.chat.scheduleMessage({
+                channel,
+                text: message,
+                post_at: getTommorrowPostTime()
+            });
+        } else{
+            await web.chat.postMessage({
+                channel,
+                thread_ts: messageId,
+                text: message
+            });
+        }
+
     } catch (e) {
         console.error('# error trying to reply to a message:', e.message, 'message',message)
     }
@@ -73,6 +90,16 @@ const sendSlackMessage = async (message) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
 
     try {
+        if (isOffTime()){
+            const result = await  web.chat.scheduleMessage({
+                channel,
+                text: message,
+                post_at: getTommorrowPostTime()
+            });
+            console.error('# scheduleMessage:', result.scheduled_message_id);
+
+            return result.scheduled_message_id;
+        }
         const resp = await web.chat.postMessage({
             text: message,
             channel,
@@ -91,3 +118,6 @@ module.exports = {
     updateSlackMessage,
     removeReactToSlackMessage
 }
+/*
+scheduled_message_id
+ */
