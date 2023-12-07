@@ -86,25 +86,34 @@ const deleteSlackMessage = async (messageId) => {
     }
 };
 
+const sendSlackMessageNow = async (message, channel) => {
+    const resp = await web.chat.postMessage({
+        text: message,
+        channel,
+    });
+    return resp.ts;
+}
 const sendSlackMessage = async (message) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
 
     try {
         if (isOffTime()){
-            const result = await  web.chat.scheduleMessage({
-                channel,
-                text: message,
-                post_at: getTommorrowPostTime()
-            });
-            console.error('# scheduleMessage:', result.scheduled_message_id);
+            try {
+                const result = await web.chat.scheduleMessage({
+                    channel,
+                    text: message,
+                    post_at: getTommorrowPostTime()
+                });
+                console.log('# schedule Message result:', JSON.stringify(result));
 
-            return result.scheduled_message_id;
+                return result.scheduled_message_id;
+            } catch (e) {
+                console.error('# failed to send schedule message:', e);
+                return await sendSlackMessageNow(message, channel);
+            }
         }
-        const resp = await web.chat.postMessage({
-            text: message,
-            channel,
-        });
-        return resp.ts;
+
+        return await sendSlackMessageNow(message, channel);
     } catch (e) {
         console.error('# error trying to send message:', e.message, 'message')
     }
