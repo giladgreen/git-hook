@@ -10,7 +10,7 @@ function getTommorrowPostTime(){
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(9, 0, 0);
-    return tomorrow.getTime() / 1000;
+    return Number(tomorrow.getTime() / 1000);
 }
 
 const updateSlackMessage = async (messageId, message) => {
@@ -99,10 +99,14 @@ const sendSlackMessage = async (message) => {
     try {
         if (isOffTime()){
             try {
+                const post_at = getTommorrowPostTime();
+                console.log('# schedule Message post_at:', post_at, typeof post_at);
+
+
                 const result = await web.chat.scheduleMessage({
                     channel,
                     text: message,
-                    post_at: getTommorrowPostTime()
+                    post_at
                 });
                 console.log('# schedule Message result:', JSON.stringify(result));
 
