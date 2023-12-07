@@ -108,7 +108,8 @@ const sendSlackMessage = async (message) => {
 
                 return result.scheduled_message_id;
             } catch (e) {
-                console.error('# failed to send schedule message:', e);
+                console.error('# failed to send schedule message. error message:', e.message);
+                console.error('# failed to send schedule message. error data:',JSON.stringify(e.data));
                 return await sendSlackMessageNow(message, channel);
             }
         }
