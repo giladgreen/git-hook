@@ -12,7 +12,7 @@ function getTommorrowPostTime(){
     tomorrow.setHours(9, 0, 0);
     const t = `${tomorrow.getTime()}`;
     console.log('##### t:', t)
-    console.log('##### t.substring(0, t.length - 4):', t.substring(0, t.length - 4))
+    console.log('##### t.substring(0, t.length - 4):', t.substring(0, t.length - 3))
 
     return Number(t.substring(0, t.length - 4));
 }
