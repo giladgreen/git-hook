@@ -10,8 +10,11 @@ function getTommorrowPostTime(){
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(9, 0, 0);
-    // return Math.floor(Number(tomorrow.getTime() / 1000));
-    return tomorrow.getTime();
+    const t = `${tomorrow.getTime()}`;
+    console.log('##### t:', t)
+    console.log('##### t.substring(0, t.length - 4):', t.substring(0, t.length - 4))
+
+    return Number(t.substring(0, t.length - 4));
 }
 
 const updateSlackMessage = async (messageId, message) => {
