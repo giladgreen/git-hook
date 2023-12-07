@@ -118,6 +118,7 @@ const sendSlackMessage = async (message) => {
             } catch (e) {
                 console.error('# failed to send schedule message. error message:', e.message);
                 console.error('# failed to send schedule message. error data:',JSON.stringify(e.data));
+                return;
             }
         }
 
