@@ -101,14 +101,10 @@ const sendSlackMessage = async (message) => {
     try {
         if (isOffTime()){
             try {
-                const post_at = getTommorrowPostTime();
-                console.log('# schedule Message post_at:', post_at, typeof post_at);
-
-
                 const result = await web.chat.scheduleMessage({
                     channel,
                     text: message,
-                    post_at
+                    post_at: getTommorrowPostTime()
                 });
                 console.log('# schedule Message result:', JSON.stringify(result));
 
@@ -116,7 +112,6 @@ const sendSlackMessage = async (message) => {
             } catch (e) {
                 console.error('# failed to send schedule message. error message:', e.message);
                 console.error('# failed to send schedule message. error data:',JSON.stringify(e.data));
-                return;
             }
         }
 
