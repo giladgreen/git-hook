@@ -10,7 +10,8 @@ function getTommorrowPostTime(){
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(9, 0, 0);
-    return Math.floor(Number(tomorrow.getTime() / 1000));
+    // return Math.floor(Number(tomorrow.getTime() / 1000));
+    return tomorrow.getTime();
 }
 
 const updateSlackMessage = async (messageId, message) => {
@@ -114,8 +115,6 @@ const sendSlackMessage = async (message) => {
             } catch (e) {
                 console.error('# failed to send schedule message. error message:', e.message);
                 console.error('# failed to send schedule message. error data:',JSON.stringify(e.data));
-               // return await sendSlackMessageNow(message, channel);
-                return;
             }
         }
 
