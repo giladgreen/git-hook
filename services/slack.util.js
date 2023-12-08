@@ -9,7 +9,14 @@ const web = new WebClient(process.env.SLACK_TOKEN, options);
 function getTommorrowPostTime(){
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(9, 0, 0);
+    let day = tomorrow.getDay();
+
+    while (day >= 5) {
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        day = tomorrow.getDay();
+    }
+
+    tomorrow.setHours(7, 0, 0);
     const t = `${tomorrow.getTime()}`;
     console.log('##### t:', t)
     return Number(t.substring(0, t.length - 3));
@@ -106,8 +113,6 @@ const sendSlackMessage = async (message) => {
                     text: message,
                     post_at: getTommorrowPostTime()
                 });
-                console.log('# schedule Message result:', JSON.stringify(result));
-
                 return result.scheduled_message_id;
             } catch (e) {
                 console.error('# failed to send schedule message. error message:', e.message);
