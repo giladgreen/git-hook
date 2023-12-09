@@ -126,13 +126,19 @@ const sendSlackMessage = async (message) => {
     }
 };
 
+async function processSlackRequest(body) {
+    if (body.messageId){
+        return await deleteSlackMessage(body.messageId)
+    }
+}
 module.exports = {
     sendSlackMessage,
     deleteSlackMessage,
     replayToSlackMessage,
     reactToSlackMessage,
     updateSlackMessage,
-    removeReactToSlackMessage
+    removeReactToSlackMessage,
+    processSlackRequest
 }
 /*
 scheduled_message_id

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
 const gitRouter = require('./routes/git');
+const slackRouter = require('./routes/slack');
 
 app.use(bodyParser.json());
 app.use(
@@ -17,6 +18,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/git', gitRouter);
+app.use('/slack', slackRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {
