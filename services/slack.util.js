@@ -141,7 +141,7 @@ async function processSlackGetRequest() {
             limit: 5
         });
 
-        return result.messages;
+        return result;
     } catch (e) {
         console.error('# error trying to get slack history:', e.message)
         return e
