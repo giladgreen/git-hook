@@ -122,17 +122,21 @@ const sendSlackMessage = async (message) => {
 
         return await sendSlackMessageNow(message, channel);
     } catch (e) {
-        console.error('# error trying to send message:', e.message, 'message')
+        console.error('# error trying to send message:', e.message)
     }
 };
 
 async function processSlackGetRequest() {
-    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
-    const result = await web.conversations.history({
-        channel
-    });
+    try {
+        const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+        const result = await web.conversations.history({
+            channel
+        });
 
-    return result.messages;
+        return result.messages;
+    } catch (e) {
+        console.error('# error trying to get slack history:', e.message)
+    }
 }
 async function processSlackDeleteRequest(body) {
     if (body.messageId){
