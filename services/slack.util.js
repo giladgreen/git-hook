@@ -96,7 +96,7 @@ const deleteSlackMessage = async (messageId) => {
         });
     } catch (e) {
         console.error('# error trying to delete message:', e.message, ' messageId',messageId)
-        return error;
+        return e;
     }
 };
 
