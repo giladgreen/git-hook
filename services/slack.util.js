@@ -6,7 +6,7 @@ const options = {};
 const web = new WebClient(process.env.SLACK_TOKEN, options);
 //
 
-function getTommorrowPostTime(){
+function getTomorrowPostTime(){
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     let day = tomorrow.getDay();
@@ -32,7 +32,8 @@ const updateSlackMessage = async (messageId, message) => {
             // You could also use a blocks[] array to send richer content
         });
     } catch (e) {
-        console.error('# error trying to update message:', e.message,' message',message)
+        console.error('# error trying to update message:', e.message,' message',message);
+        return e;
     }
 }
 const replayToSlackMessage = async (messageId, message) => {
@@ -42,7 +43,7 @@ const replayToSlackMessage = async (messageId, message) => {
             await  web.chat.scheduleMessage({
                 channel,
                 text: message,
-                post_at: getTommorrowPostTime()
+                post_at: getTomorrowPostTime()
             });
         } else{
             await web.chat.postMessage({
@@ -53,7 +54,8 @@ const replayToSlackMessage = async (messageId, message) => {
         }
 
     } catch (e) {
-        console.error('# error trying to reply to a message:', e.message, 'message',message)
+        console.error('# error trying to reply to a message:', e.message, 'message',message);
+        return e;
     }
 }
 const reactToSlackMessage = async (messageId, reaction) => {
@@ -66,7 +68,8 @@ const reactToSlackMessage = async (messageId, reaction) => {
             name: reaction
         });
     } catch (e) {
-        console.error('# error trying to react to a message:', e.message, 'messageId:',messageId,'reaction', reaction)
+        console.error('# error trying to react to a message:', e.message, 'messageId:',messageId,'reaction', reaction);
+        return e;
     }
 }
 const removeReactToSlackMessage = async (messageId, reaction) => {
@@ -79,7 +82,8 @@ const removeReactToSlackMessage = async (messageId, reaction) => {
             name: reaction
         });
     } catch (e) {
-        console.error('# error trying to remove message reaction:', e.message, 'messageId:',messageId,'reaction', reaction)
+        console.error('# error trying to remove message reaction:', e.message, 'messageId:',messageId,'reaction', reaction);
+        return e;
     }
 }
 const deleteSlackMessage = async (messageId) => {
@@ -92,9 +96,7 @@ const deleteSlackMessage = async (messageId) => {
         });
     } catch (e) {
         console.error('# error trying to delete message:', e.message, ' messageId',messageId)
-        return {
-            error:  e.message
-        }
+        return error;
     }
 };
 
@@ -114,7 +116,7 @@ const sendSlackMessage = async (message) => {
                 const result = await web.chat.scheduleMessage({
                     channel,
                     text: message,
-                    post_at: getTommorrowPostTime()
+                    post_at: getTomorrowPostTime()
                 });
                 return result.scheduled_message_id;
             } catch (e) {
@@ -125,7 +127,8 @@ const sendSlackMessage = async (message) => {
 
         return await sendSlackMessageNow(message, channel);
     } catch (e) {
-        console.error('# error trying to send message:', e.message)
+        console.error('# error trying to send message:', e.message);
+        return error;
     }
 };
 
@@ -141,9 +144,7 @@ async function processSlackGetRequest() {
         return result.messages;
     } catch (e) {
         console.error('# error trying to get slack history:', e.message)
-        return {
-            error:  e.message
-        }
+        return error
     }
 }
 async function processSlackDeleteRequest(body) {
