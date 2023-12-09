@@ -92,6 +92,9 @@ const deleteSlackMessage = async (messageId) => {
         });
     } catch (e) {
         console.error('# error trying to delete message:', e.message, ' messageId',messageId)
+        return {
+            error:  e.message
+        }
     }
 };
 
@@ -138,6 +141,9 @@ async function processSlackGetRequest() {
         return result.messages;
     } catch (e) {
         console.error('# error trying to get slack history:', e.message)
+        return {
+            error:  e.message
+        }
     }
 }
 async function processSlackDeleteRequest(body) {
