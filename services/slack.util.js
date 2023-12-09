@@ -130,7 +130,9 @@ async function processSlackGetRequest() {
     try {
         const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
         const result = await web.conversations.history({
-            channel
+            channel,
+            inclusive: true,
+            limit: 5
         });
 
         return result.messages;
