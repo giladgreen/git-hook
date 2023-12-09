@@ -128,7 +128,7 @@ const sendSlackMessage = async (message) => {
         return await sendSlackMessageNow(message, channel);
     } catch (e) {
         console.error('# error trying to send message:', e.message);
-        return error;
+        return e;
     }
 };
 
@@ -144,7 +144,7 @@ async function processSlackGetRequest() {
         return result.messages;
     } catch (e) {
         console.error('# error trying to get slack history:', e.message)
-        return error
+        return e
     }
 }
 async function processSlackDeleteRequest(body) {
