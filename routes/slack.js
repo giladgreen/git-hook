@@ -4,7 +4,17 @@ const slack = require('../services/slack.util');
 
 router.post('/', async function(req, res, next) {
   try {
-    res.json(await slack.processSlackRequest(req.body));
+    res.json(await slack.processSlackDeleteRequest(req.body));
+  } catch (err) {
+    console.error(`Error while processing request`, err.message);
+    next(err);
+  }
+});
+
+
+router.get('/', async function(req, res, next) {
+  try {
+    res.json(await slack.processSlackGetRequest());
   } catch (err) {
     console.error(`Error while processing request`, err.message);
     next(err);

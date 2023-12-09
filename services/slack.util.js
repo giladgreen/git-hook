@@ -126,7 +126,15 @@ const sendSlackMessage = async (message) => {
     }
 };
 
-async function processSlackRequest(body) {
+async function processSlackGetRequest() {
+    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+    const result = await web.conversations.history({
+        channel
+    });
+
+    return result.messages;
+}
+async function processSlackDeleteRequest(body) {
     if (body.messageId){
         return await deleteSlackMessage(body.messageId)
     }
@@ -138,7 +146,8 @@ module.exports = {
     reactToSlackMessage,
     updateSlackMessage,
     removeReactToSlackMessage,
-    processSlackRequest
+    processSlackDeleteRequest,
+    processSlackGetRequest
 }
 /*
 scheduled_message_id

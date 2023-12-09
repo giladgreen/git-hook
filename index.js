@@ -5,6 +5,7 @@ const port = process.env.PORT || 3000;
 const gitRouter = require('./routes/git');
 const slackRouter = require('./routes/slack');
 
+//https://git-hook-6aeb02160f71.herokuapp.com/git
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
