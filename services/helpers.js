@@ -3,6 +3,7 @@ const CLIENT_REPO = 'acs-schedule';
 const PLAN_REPO = 'plan-classic-web';
 const HOUR = (60 * 60 * 1000);
 const DAY = 24 * HOUR;
+const BOT_ID = 'U03JV4K3M';
 
 const userNameToName = {
     greeng: 'Gilad Green',

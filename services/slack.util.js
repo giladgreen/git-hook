@@ -133,19 +133,22 @@ const sendSlackMessage = async (message) => {
 };
 
 async function processSlackGetRequest() {
-    try {
-        const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
-        const result = await web.conversations.list({
-            channel,
-            inclusive: true,
-            limit: 5
-        });
-
-        return result;
-    } catch (e) {
-        console.error('# error trying to get slack history:', e.message)
-        return e
+    return {
+        msg: "this API currently does not work"
     }
+    // try {
+    //     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+    //     const result = await web.conversations.list({
+    //         channel,
+    //         inclusive: true,
+    //         limit: 5
+    //     });
+    //
+    //     return result;
+    // } catch (e) {
+    //     console.error('# error trying to get slack history:', e.message)
+    //     return e
+    // }
 }
 async function processSlackDeleteRequest(body) {
     if (body.messageId){
