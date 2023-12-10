@@ -152,7 +152,10 @@ async function processSlackGetRequest() {
 }
 async function processSlackDeleteRequest(body) {
     if (body.messageId){
-        return await deleteSlackMessage(body.messageId)
+        //p1702191600208579
+        const messageId = body.messageId.indexOf('p') === 0 ? `${body.messageId.substr(1, 10)}.${body.messageId.substr(11)}` : body.messageId;
+
+        return await deleteSlackMessage(messageId)
     }
 }
 module.exports = {
