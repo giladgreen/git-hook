@@ -27,7 +27,7 @@ const userNameToId = {
 }
 
 const serverDevelopers = ['greeng','tchizid','levin'];
-const clientDevelopers = ['greeng','maltzmb','erlicho'];
+const clientDevelopers = ['greeng','maltzmb','tchizid'];
 
 function getRepo(url){
     return url.includes(CLIENT_REPO) ? CLIENT_REPO: (url.includes(SERVER_REPO) ? SERVER_REPO : PLAN_REPO);
