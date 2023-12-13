@@ -16,9 +16,9 @@ function getTomorrowPostTime(){
         day = tomorrow.getDay();
     }
 
-    tomorrow.setHours(7, 0, 0);
+    tomorrow.setHours(6, 30, 0);
     const t = `${tomorrow.getTime()}`;
-    console.log('##### t:', t)
+
     return Number(t.substring(0, t.length - 3));
 }
 
@@ -111,12 +111,14 @@ const sendSlackMessage = async (message) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
 
     try {
+        const messageId = await sendSlackMessageNow(message, channel);
         if (isOffTime()){
             try {
                 const result = await web.chat.scheduleMessage({
                     channel,
-                    text: message,
-                    post_at: getTomorrowPostTime()
+                    text: ':point_up',
+                    post_at: getTomorrowPostTime(),
+                    thread_ts: messageId
                 });
                 return result.scheduled_message_id;
             } catch (e) {
@@ -124,8 +126,8 @@ const sendSlackMessage = async (message) => {
                 console.error('# failed to send schedule message. error data:',JSON.stringify(e.data));
             }
         }
+        return messageId;
 
-        return await sendSlackMessageNow(message, channel);
     } catch (e) {
         console.error('# error trying to send message:', e.message);
         return e;
