@@ -106,6 +106,7 @@ const sendSlackMessageNow = async (message, channel) => {
         text: message,
         channel,
     });
+    console.log('## sendSlackMessageNow resp', resp)
     return resp.ts;
 }
 const sendSlackMessage = async (message) => {
