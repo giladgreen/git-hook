@@ -43,6 +43,7 @@ const replayToSlackMessage = async (messageId, message) => {
             await  web.chat.scheduleMessage({
                 channel,
                 text: message,
+                thread_ts: messageId,
                 post_at: getTomorrowPostTime()
             });
         } else{
@@ -116,7 +117,7 @@ const sendSlackMessage = async (message) => {
             try {
                 const result = await web.chat.scheduleMessage({
                     channel,
-                    text: ':point_up',
+                    text: ':point_up:',
                     post_at: getTomorrowPostTime(),
                     thread_ts: messageId
                 });
