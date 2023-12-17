@@ -40,7 +40,7 @@ const replayToSlackMessage = async (messageId, message) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
     try {
         if (isOffTime()){
-            await  web.chat.scheduleMessage({
+            await web.chat.scheduleMessage({
                 channel,
                 text: message,
                 thread_ts: messageId,
@@ -116,13 +116,12 @@ const sendSlackMessage = async (message) => {
         const messageId = await sendSlackMessageNow(message, channel);
         if (isOffTime()){
             try {
-                const result = await web.chat.scheduleMessage({
+                await web.chat.scheduleMessage({
                     channel,
                     text: ':point_up:',
                     post_at: getTomorrowPostTime(),
                     thread_ts: messageId
                 });
-                return result.scheduled_message_id;
             } catch (e) {
                 console.error('# failed to send schedule message. error message:', e.message);
                 console.error('# failed to send schedule message. error data:',JSON.stringify(e.data));
