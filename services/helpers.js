@@ -76,6 +76,10 @@ ${description}` : null;
 
 
 function getSlackMessageForNewPR(tags, prCreator, prUrl, title, description, extra) {
+
+    console.log('description',description)
+    console.log('description length',description?.length)
+
     return `
 ${tags}
 *${prCreator}* Has requested your review for this PR: 
@@ -88,7 +92,7 @@ ${extra ? ` *Changed files*:${extra.changedFiles}` : ''}
 ${extra ? ` *Lines added*: +${extra.additions}` : ''}
 ${extra ? ` *Lines removed*: -${extra.deletions}` : ''}
 
-${description && description.length > 0 ? description : ''}
+${description && description.trim().length > 0 ? description : ''}
 
 `;
 }
