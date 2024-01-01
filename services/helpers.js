@@ -63,12 +63,12 @@ function hasCustomDescription(description) {
 }
 
 function getDescription(fullDescription){
-    if (!fullDescription) {
+    if (!fullDescription ) {
         return null;
     }
     const description = fullDescription.split('## Risk and Impact Analysis')[0].trim();
 
-    const result =  hasCustomDescription(description) ? `*PR Description:*
+    const result = description && description.length > 0 && hasCustomDescription(description) ? `*PR Description:*
 ${description}` : null;
 
     return result;
@@ -76,9 +76,6 @@ ${description}` : null;
 
 
 function getSlackMessageForNewPR(tags, prCreator, prUrl, title, description, extra) {
-
-    console.log('description',description)
-    console.log('description length',description?.length)
 
     return `
 ${tags}
