@@ -85,11 +85,11 @@ ${prUrl}
 *PR Title:* 
 ${title}
 
-${extra ? ` *Changed files*:${extra.changedFiles}` : ''}
-${extra ? ` *Lines added*: +${extra.additions}` : ''}
-${extra ? ` *Lines removed*: -${extra.deletions}` : ''}
+${extra ? ` * *Changed files*:${extra.changedFiles}` : ''}
+${extra ? ` * *Lines added*: +${extra.additions}` : ''}
+${extra ? ` * *Lines removed*: -${extra.deletions}` : ''}
 
-${description && description.trim().length > 0 ? description : ''}
+${description ? description : ''}
 
 `;
 }

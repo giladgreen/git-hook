@@ -118,14 +118,13 @@ async function processPREvent(body) {
   const title = pull_request?.title;
   const desc = pull_request?.body;
 
-  const extra = pull_request ? {
-     additions: pull_request?.additions,
-     deletions: pull_request?.deletions,
-     changedFiles: pull_request?.changed_files
+  const extra = pull_request?.changed_files ? {
+     additions: pull_request.additions,
+     deletions: pull_request.deletions,
+     changedFiles: pull_request.changed_files
   } : null;
 
   console.log('## action:', action, ' repo:', url,'  creator:', getName(creator));
-  console.log('## extra:', JSON.stringify(extra));
 
   if (action === 'labeled' && label?.name === 'Ready to review') {
     return await processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc, extra);
