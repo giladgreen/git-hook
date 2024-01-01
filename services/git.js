@@ -119,9 +119,9 @@ async function processPREvent(body) {
   const desc = pull_request?.body;
 
   const extra = pull_request ? {
-     additions: pull_request?.additions;
-     deletions: pull_request?.deletions;
-     changedFiles: pull_request?.changed_files;
+     additions: pull_request?.additions,
+     deletions: pull_request?.deletions,
+     changedFiles: pull_request?.changed_files
   } : null;
 
   console.log('## action:', action, ' repo:', url,'  creator:', getName(creator));
