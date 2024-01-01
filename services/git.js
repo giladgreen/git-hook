@@ -21,12 +21,12 @@ const {
   reactToSlackMessage } = require("./slack.util");
 
 
-async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc) {
+async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc, extra) {
   const tags = getTags(repo, creator);
   const description = getDescription(desc);
   const prCreator = getName(creator);
   const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
-  const slackMessage = getSlackMessageForNewPR(tags, prCreator, prUrl, title, description);
+  const slackMessage = getSlackMessageForNewPR(tags, prCreator, prUrl, title, description, extra);
   const messageId = await sendSlackMessage(slackMessage);
   await db.createPR(title, creator, repo, prNumber, tags, new Date(), messageId);
 }
@@ -117,10 +117,17 @@ async function processPREvent(body) {
   const creator = pull_request?.user?.login;
   const title = pull_request?.title;
   const desc = pull_request?.body;
+
+  const extra = pull_request ? {
+     additions: pull_request?.additions;
+     deletions: pull_request?.deletions;
+     changedFiles: pull_request?.changed_files;
+  } : null;
+
   console.log('## action:', action, ' repo:', url,'  creator:', getName(creator));
 
   if (action === 'labeled' && label?.name === 'Ready to review') {
-    return await processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc);
+    return await processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc, extra);
   }
 
   if (action === 'unlabeled' && label?.name === 'Ready to review') {

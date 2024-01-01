@@ -75,7 +75,7 @@ ${description}` : null;
 }
 
 
-function getSlackMessageForNewPR(tags, prCreator, prUrl, title, description) {
+function getSlackMessageForNewPR(tags, prCreator, prUrl, title, description, extra) {
     return `
 ${tags}
 *${prCreator}* Has requested your review for this PR: 
@@ -84,7 +84,11 @@ ${prUrl}
 *PR Title:* 
 ${title}
 
-${description ? description : ''}
+${extra ? `:alphabet-white-hash: Changed files:${extra.changedFiles}` : ''}
+${extra ? `:heavy-plus-sign: Lines added:${extra.additions}` : ''}
+${extra ? `:heavy-minus-sign: Lines removed:${extra.deletions}` : ''}
+
+${description && description.length > 0 ? description : ''}
 
 `;
 }
