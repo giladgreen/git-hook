@@ -84,9 +84,9 @@ ${prUrl}
 *PR Title:* 
 ${title}
 
-${extra ? `:alphabet-white-hash: *Changed files*:${extra.changedFiles}` : ''}
-${extra ? `+ *Lines added*:${extra.additions}` : ''}
-${extra ? `- *Lines removed*:${extra.deletions}` : ''}
+${extra ? ` *Changed files*:${extra.changedFiles}` : ''}
+${extra ? ` *Lines added*: +${extra.additions}` : ''}
+${extra ? ` *Lines removed*: -${extra.deletions}` : ''}
 
 ${description && description.length > 0 ? description : ''}
 
