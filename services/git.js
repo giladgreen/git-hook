@@ -85,14 +85,14 @@ function getReactionMessage(creator, approveUser, reactionType){
   return '';
 }
 
-async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDesc, reactionType) {
+async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDesc, reactionType, extra) {
   const pr = await db.getPR(repo, prNumber);
   if (pr) {
     const creator = pr.creator;
     const description = getDescription(prDesc);
     const prCreator = getName(creator);
     const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
-    const slackMessageWithoutNewTags = getSlackMessageForNewPR('', prCreator, prUrl, pr.name, description);
+    const slackMessageWithoutNewTags = getSlackMessageForNewPR('', prCreator, prUrl, pr.name, description, extra);
     const id = pr.id;
     const messageId = pr.slack_message_id;
     await updateSlackMessage(messageId, slackMessageWithoutNewTags);
@@ -125,6 +125,7 @@ async function processPREvent(body) {
   } : null;
 
   console.log('## action:', action, ' repo:', url,'  creator:', getName(creator));
+  console.log('## extra:', JSON.stringify(extra));
 
   if (action === 'labeled' && label?.name === 'Ready to review') {
     return await processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc, extra);
@@ -139,7 +140,7 @@ async function processPREvent(body) {
   }
 
   if (action === 'submitted') {
-    return await processPRReacted(repo, prNumber, review?.user?.login, review?.body, desc, review.state);
+    return await processPRReacted(repo, prNumber, review?.user?.login, review?.body, desc, review.state, extra);
   }
 
   return 'other event';
