@@ -1,6 +1,7 @@
 const SERVER_REPO = 'schedule-service';
 const CLIENT_REPO = 'acs-schedule';
 const PLAN_REPO = 'plan-classic-web';
+const EXTRATOR_REPO = 'schedule-extractor';
 const HOUR = (60 * 60 * 1000);
 const DAY = 24 * HOUR;
 const BOT_ID = 'U03JV4K3M';
@@ -30,7 +31,19 @@ const serverDevelopers = ['greeng','tchizid','levin'];
 const clientDevelopers = ['greeng','maltzmb'];
 
 function getRepo(url){
-    return url.includes(CLIENT_REPO) ? CLIENT_REPO: (url.includes(SERVER_REPO) ? SERVER_REPO : PLAN_REPO);
+    if (url.includes(EXTRATOR_REPO)){
+        return EXTRATOR_REPO;
+    }
+    if (url.includes(CLIENT_REPO)){
+        return CLIENT_REPO;
+    }
+    if (url.includes(SERVER_REPO)){
+        return SERVER_REPO;
+    }
+    if (url.includes(PLAN_REPO)){
+        return PLAN_REPO;
+    }
+    return 'unknown repo';
 }
 
 
@@ -49,7 +62,7 @@ function getTagName(username){
 }
 
 function getTags(repo, creator){
-    if (repo === SERVER_REPO || repo === PLAN_REPO){
+    if (repo === SERVER_REPO || repo === PLAN_REPO || repo === EXTRATOR_REPO){
         return serverDevelopers.filter(item => item !== creator).map(item => getTagName(item)).join(', ');
     }
     if (repo === CLIENT_REPO){
