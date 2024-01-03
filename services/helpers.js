@@ -28,7 +28,7 @@ const userNameToId = {
 }
 
 const serverDevelopers = ['greeng','tchizid','levin'];
-const clientDevelopers = ['greeng','maltzmb'];
+const clientDevelopers = ['greeng','maltzmb','erlicho'];
 
 function getRepo(url){
     if (url.includes(EXTRATOR_REPO)){
