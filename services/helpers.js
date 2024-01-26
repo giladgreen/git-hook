@@ -14,6 +14,7 @@ const userNameToName = {
     tchizid:  'Dor Tchizik',
     levin: 'Nir Levi',
     nadivr:'Raviv Nadiv',
+    shermam1:'Micha Sherman',
     renovate: 'Renovate Bot'
 }
 
@@ -23,12 +24,13 @@ const userNameToId = {
     zlufl: 'UA33JGJLA',//'Liron Zluf',
     erlicho: 'U0275G55QQ0',//'Odiya Erlichster',
     tchizid: 'U011A594ARZ',// 'Dor Tchizik',
-    levin: 'U41CXMEAG'//'Nir Levi',
+    levin: 'U41CXMEAG',//'Nir Levi',
+    shermam1: 'U06BZ11J8P7'//'Micha Sherman',
     //TODO: micha
 }
 
 const serverDevelopers = ['greeng','tchizid','levin'];
-const clientDevelopers = ['greeng','maltzmb','erlicho'];
+const clientDevelopers = ['greeng','maltzmb','erlicho','shermam1'];
 
 function getRepo(url){
     if (url.includes(EXTRATOR_REPO)){
