@@ -26,7 +26,6 @@ const userNameToId = {
     tchizid: 'U011A594ARZ',// 'Dor Tchizik',
     levin: 'U41CXMEAG',//'Nir Levi',
     shermam1: 'U06BZ11J8P7'//'Micha Sherman',
-    //TODO: micha
 }
 
 const serverDevelopers = ['greeng','tchizid','levin'];
@@ -118,7 +117,7 @@ function isOffTime(){
         return true;
     }
     const currentTime = now.getHours() + 4;
-    if (currentTime < 8 || currentTime > 17) {
+    if (currentTime < 8 || currentTime > 20) {
         return true;
     }
 

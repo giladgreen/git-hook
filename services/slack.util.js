@@ -39,20 +39,11 @@ const updateSlackMessage = async (messageId, message) => {
 const replayToSlackMessage = async (messageId, message) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
     try {
-        if (isOffTime()){
-            await web.chat.scheduleMessage({
-                channel,
-                text: message,
-                thread_ts: messageId,
-                post_at: getTomorrowPostTime()
-            });
-        } else{
-            await web.chat.postMessage({
-                channel,
-                thread_ts: messageId,
-                text: message
-            });
-        }
+        await web.chat.postMessage({
+            channel,
+            thread_ts: messageId,
+            text: message
+        });
 
     } catch (e) {
         console.error('# error trying to reply to a message:', e.message, 'message',message);
@@ -114,19 +105,7 @@ const sendSlackMessage = async (message) => {
 
     try {
         const messageId = await sendSlackMessageNow(message, channel);
-        if (isOffTime()){
-            try {
-                await web.chat.scheduleMessage({
-                    channel,
-                    text: ':point_up:',
-                    post_at: getTomorrowPostTime(),
-                    thread_ts: messageId
-                });
-            } catch (e) {
-                console.error('# failed to send schedule message. error message:', e.message);
-                console.error('# failed to send schedule message. error data:',JSON.stringify(e.data));
-            }
-        }
+
         return messageId;
 
     } catch (e) {
