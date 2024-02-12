@@ -96,7 +96,11 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
     const id = pr.id;
     const messageId = pr.slack_message_id;
     await updateSlackMessage(messageId, slackMessageWithoutNewTags);
-    await reactToSlackMessage(messageId, reactions[reactionType]);
+    if (reactionType !== 'commented' || creator !== reactedUser){
+      // dont add eyes emoji because of a comment added by PR creator
+      await reactToSlackMessage(messageId, reactions[reactionType]);
+    }
+
     const message = getReactionMessage(creator, reactedUser, reactionType);
     await replayToSlackMessage(messageId, message);
     if (reactionBody && reactionBody.length > 0){
