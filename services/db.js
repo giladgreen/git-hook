@@ -3,6 +3,8 @@ const config = require('../config');
 const { DAY, HOUR } = require("./helpers");
 
 async function query(sql, params) {
+  console.log('## query', sql, params)
+  console.log('## config.db',config.db)
   const connection = await mysql.createConnection(config.db);
   const [results, ] = await connection.execute(sql, params);
 
