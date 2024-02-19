@@ -11,6 +11,7 @@ async function query(sql, params) {
   return results;
 }
 
+
 async function createPR(name, creator, repo, pr_number, tags,  last_reminder, messageId) {
   return await query(
       `INSERT INTO prs
