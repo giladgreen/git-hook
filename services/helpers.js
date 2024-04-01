@@ -11,10 +11,10 @@ const userNameToName = {
     maltzmb: 'Bar Maltzman',
     zlufl: 'Liron Zluf',
     erlicho: 'Odiya Erlichster',
-    tchizid:  'Dor Tchizik',
+    tchizid: 'Dor Tchizik',
     levin: 'Nir Levi',
-    nadivr:'Raviv Nadiv',
-    shermam1:'Micha Sherman',
+    nadivr: 'Raviv Nadiv',
+    shermam1: 'Micha Sherman',
     renovate: 'Renovate Bot'
 }
 
@@ -25,7 +25,8 @@ const userNameToId = {
     erlicho: 'U0275G55QQ0',//'Odiya Erlichster',
     tchizid: 'U011A594ARZ',// 'Dor Tchizik',
     levin: 'U41CXMEAG',//'Nir Levi',
-    shermam1: 'U06BZ11J8P7'//'Micha Sherman',
+    shermam1: 'U06BZ11J8P7',//'Micha Sherman',
+    nadivr: 'U03FTQS4GM9'//'Raviv Nadiv',
 }
 
 const serverDevelopers = ['greeng','tchizid','levin'];
