@@ -20,6 +20,8 @@ async function sendSms(body) {
             sendSlackNotification(`sms sent to ${body.phone}`);
             return 'wait for sms..'
         } catch (e) {
+            console.error('## error sending sms:', e);
+            console.error('## error sending sms:', e.message);
             sendSlackNotification(`error:`, e.message);
             throw e;
         }
