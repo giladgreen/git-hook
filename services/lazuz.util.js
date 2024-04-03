@@ -29,7 +29,9 @@ async function sendSms(body) {
             }, function(error, meta, body){
                 console.log('error',error);
                 console.log('meta',meta);
-                console.log('body',body);
+                console.log('body',body.toString());
+
+                sendSlackNotification(`fetch error ${body.toString()}`);
             });
 
             await axios.post(axiosUrl, axiosData, { headers: { 'Content-Type': 'application/json' }});
