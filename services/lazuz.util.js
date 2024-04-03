@@ -25,7 +25,7 @@ async function sendSms(body) {
             console.log('## axiosData:', axiosData);
 
             fetchUrl(axiosUrl,{
-                payload: axiosData
+                payload: JSON.stringify(axiosData)
             }, function(error, meta, body){
                 console.log('error',error);
                 console.log('meta',meta);
