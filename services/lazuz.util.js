@@ -38,7 +38,8 @@ async function search(body) {
         const token = tokenResponse.data.user.token;
         sendSlackNotification(`got token, sending search request for this dates: ${body.dates}`);
         const results = {};
-        body.dates.forEach(date =>{
+        for (let i=0; i< body.dates.length; i++){
+            const date = body.dates[i];
             const response = await axios.get(`https://server.lazuz.co.il/client-app/clubs-by-ids/?clubIds=139,54&duration=60&date=${date}&court_type=3&category=null`, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -54,8 +55,7 @@ async function search(body) {
                 })
 
             }
-
-        })
+        }
 
         sendSlackNotification(`search result:
 ${JSON.stringify(results, null, 2)}
