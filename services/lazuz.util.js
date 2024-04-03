@@ -9,15 +9,22 @@ const CLUBS ={
 }
 async function sendSms(body) {
     if (body.phone){
-        await axios.post('https://server.lazuz.co.il/users/signup-sms/', {
-            phone: body.phone,
-            name: NAME,
-            policyApprove: true,
-            android: 1
-        });
+        try {
+            await axios.post('https://server.lazuz.co.il/users/signup-sms/', {
+                phone: body.phone,
+                name: NAME,
+                policyApprove: true,
+                android: 1
+            });
 
-        sendSlackNotification(`sms sent to ${body.phone}`);
-        return 'wait for sms..'
+            sendSlackNotification(`sms sent to ${body.phone}`);
+            return 'wait for sms..'
+        } catch (e) {
+            sendSlackNotification(`error:`, e);
+            throw e;
+        }
+
+
     }
 
     throw new Error ('phone is required');
