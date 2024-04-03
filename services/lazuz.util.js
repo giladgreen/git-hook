@@ -21,9 +21,7 @@ async function sendSms(body) {
 
             console.log('## axiosUrl:', axiosUrl);
             console.log('## axiosData:', axiosData);
-            await axios.post(axiosUrl, {
-                data: axiosData
-            });
+            await axios.post(axiosUrl, axiosData);
             console.log('## axios sent');
             sendSlackNotification(`sms sent to ${body.phone}`);
             return 'wait for sms..'
