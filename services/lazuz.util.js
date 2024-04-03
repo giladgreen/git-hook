@@ -1,4 +1,6 @@
 const axios = require('axios');
+var fetchUrl = require("fetch").fetchUrl;
+
 const { sendSlackNotification } = require("./slack.util");
 
 const NAME = "eli p";
@@ -21,12 +23,20 @@ async function sendSms(body) {
 
             console.log('## axiosUrl:', axiosUrl);
             console.log('## axiosData:', axiosData);
+
+            fetchUrl(axiosUrl,{
+                payload: axiosData
+            }, function(error, meta, body){
+                console.log('error',error);
+                console.log('meta',meta);
+                console.log('body',body);
+            });
+
             await axios.post(axiosUrl, axiosData, { headers: { 'Content-Type': 'application/json' }});
             console.log('## axios sent');
             sendSlackNotification(`sms sent to ${body.phone}`);
             return 'wait for sms..'
         } catch (e) {
-            console.error('## error sending sms:', e);
             console.error('## error sending sms:', e.message);
             sendSlackNotification(`error: ${e.message}`);
             throw e;
