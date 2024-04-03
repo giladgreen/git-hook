@@ -9,15 +9,11 @@ const CLUBS ={
 }
 async function sendSms(body) {
     if (body.phone){
-        await axios({
-            method: 'POST',
-            url: 'https://server.lazuz.co.il/users/signup-sms/',
-            data: {
-                phone: body.phone,
-                name: NAME,
-                policyApprove: true,
-                android: 1
-            }
+        await axios.post('https://server.lazuz.co.il/users/signup-sms/', {
+            phone: body.phone,
+            name: NAME,
+            policyApprove: true,
+            android: 1
         });
 
         sendSlackNotification(`sms sent to ${body.phone}`);
@@ -28,7 +24,7 @@ async function sendSms(body) {
 }
 async function search(body) {
     if (body.code && body.phone && body.dates){
-        const data = {
+        const tokenResponse = await axios.post('https://server.lazuz.co.il/users/verification-sms/', {
             phone: body.phone,
             "vCode": body.code,
             "user": {
@@ -37,22 +33,13 @@ async function search(body) {
                 policyApprove: true,
                 android: 1
             }
-        };
-         const axiosRequest = {
-             method: 'POST',
-             url: 'https://server.lazuz.co.il/users/verification-sms/',
-             data
-         }
-        sendSlackNotification(`axiosRequest:`, axiosRequest);
-        const tokenResponse = await axios(axiosRequest);
+        });
 
         const token = tokenResponse.data.user.token;
         sendSlackNotification(`got token, sending search request for this dates: ${body.dates}`);
         const results = {};
         body.dates.forEach(date =>{
-            const response = await axios({
-                method: 'GET',
-                url: `https://server.lazuz.co.il/client-app/clubs-by-ids/?clubIds=139,54&duration=60&date=${date}&court_type=3&category=null`,
+            const response = await axios.get(`https://server.lazuz.co.il/client-app/clubs-by-ids/?clubIds=139,54&duration=60&date=${date}&court_type=3&category=null`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
