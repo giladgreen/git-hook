@@ -10,13 +10,21 @@ const CLUBS ={
 async function sendSms(body) {
     if (body.phone){
         try {
-            await axios.post('https://server.lazuz.co.il/users/signup-sms/', {
+            const axiosUrl = 'https://server.lazuz.co.il/users/signup-sms';
+
+            const axiosData = {
                 phone: body.phone,
                 name: NAME,
                 policyApprove: true,
                 android: 1
-            });
+            };
 
+            console.log('## axiosUrl:', axiosUrl);
+            console.log('## axiosData:', axiosData);
+            await axios.post(axiosUrl, {
+                data: axiosData
+            });
+            console.log('## axios sent');
             sendSlackNotification(`sms sent to ${body.phone}`);
             return 'wait for sms..'
         } catch (e) {
