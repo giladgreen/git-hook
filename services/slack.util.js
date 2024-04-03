@@ -2,6 +2,7 @@ const { WebClient } = require('@slack/web-api');
 const { isOffTime } = require("./helpers");
 //const PR_CHANNEL = 'CRBDC5H6C'; (acs-schedule-eng)
 const PR_CHANNEL = 'C0679N7LHBP'; // (temp-bot-test)
+const NOTIFICATION_CHANNEL = 'C06SE2Z5GUE'; // (temp-bot-test)
 const options = {};
 const web = new WebClient(process.env.SLACK_TOKEN, options);
 //
@@ -102,6 +103,20 @@ const sendSlackMessageNow = async (message, channel) => {
 }
 const sendSlackMessage = async (message) => {
     const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+
+    try {
+        const messageId = await sendSlackMessageNow(message, channel);
+
+        return messageId;
+
+    } catch (e) {
+        console.error('# error trying to send message:', e.message);
+        return e;
+    }
+};
+
+const sendSlackNotification = async (message) => {
+    const channel = NOTIFICATION_CHANNEL;
 
     try {
         const messageId = await sendSlackMessageNow(message, channel);
