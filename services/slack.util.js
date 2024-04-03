@@ -163,7 +163,8 @@ module.exports = {
     updateSlackMessage,
     removeReactToSlackMessage,
     processSlackDeleteRequest,
-    processSlackGetRequest
+    processSlackGetRequest,
+    sendSlackNotification
 }
 /*
 scheduled_message_id
