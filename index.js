@@ -4,6 +4,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const gitRouter = require('./routes/git');
 const slackRouter = require('./routes/slack');
+const lazuzRouter = require('./routes/lazuz');
 
 //https://git-hook-6aeb02160f71.herokuapp.com/git
 app.use(bodyParser.json());
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 
 app.use('/git', gitRouter);
 app.use('/slack', slackRouter);
+app.use('/lazuz', lazuzRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {
