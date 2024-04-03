@@ -166,6 +166,3 @@ module.exports = {
     processSlackGetRequest,
     sendSlackNotification
 }
-/*
-scheduled_message_id
- */

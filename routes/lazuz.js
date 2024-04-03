@@ -1,19 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const slack = require('../services/slack.util');
+const lazuz = require('../services/lazuz.util');
 
-router.post('/', async function(req, res, next) {
+router.post('/request-sms', async function(req, res, next) {
   try {
-    res.json(await slack.processSlackDeleteRequest(req.body));
+    res.json(await lazuz.sendSms(req.body));
   } catch (err) {
     console.error(`Error while processing request`, err.message);
     next(err);
   }
 });
 
-router.get('/', async function(req, res, next) {
+router.post('/search', async function(req, res, next) {
   try {
-    res.json(await slack.processSlackGetRequest());
+    res.json(await lazuz.search(req.body));
   } catch (err) {
     console.error(`Error while processing request`, err.message);
     next(err);
