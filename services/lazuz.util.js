@@ -21,14 +21,14 @@ async function sendSms(body) {
 
             console.log('## axiosUrl:', axiosUrl);
             console.log('## axiosData:', axiosData);
-            await axios.post(axiosUrl, axiosData);
+            await axios.post(axiosUrl, axiosData, { headers: { 'Content-Type': 'application/json' }});
             console.log('## axios sent');
             sendSlackNotification(`sms sent to ${body.phone}`);
             return 'wait for sms..'
         } catch (e) {
             console.error('## error sending sms:', e);
             console.error('## error sending sms:', e.message);
-            sendSlackNotification(`error:`, e.message);
+            sendSlackNotification(`error: ${e.message}`);
             throw e;
         }
 
