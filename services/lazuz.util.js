@@ -28,20 +28,23 @@ async function sendSms(body) {
 }
 async function search(body) {
     if (body.code && body.phone && body.dates){
-        const tokenResponse = await axios({
-            method: 'POST',
-            url: 'https://server.lazuz.co.il/users/verification-sms/',
-            data: {
+        const data = {
+            phone: body.phone,
+            "vCode": body.code,
+            "user": {
                 phone: body.phone,
-                "vCode": body.code,
-                "user": {
-                    phone: body.phone,
-                    name: NAME,
-                    policyApprove: true,
-                    android: 1
-                }
+                name: NAME,
+                policyApprove: true,
+                android: 1
             }
-        });
+        };
+         const axiosRequest = {
+             method: 'POST',
+             url: 'https://server.lazuz.co.il/users/verification-sms/',
+             data
+         }
+        sendSlackNotification(`axiosRequest:`, axiosRequest);
+        const tokenResponse = await axios(axiosRequest);
 
         const token = tokenResponse.data.user.token;
         sendSlackNotification(`got token, sending search request for this dates: ${body.dates}`);
