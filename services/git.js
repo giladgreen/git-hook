@@ -184,7 +184,7 @@ async function checkForPendingPRs() {
   }))
 }
 
-checkForPendingPRs();
+// checkForPendingPRs();
 
 setInterval(checkForPendingPRs, 2 * HOUR);
 
