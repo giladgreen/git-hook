@@ -185,7 +185,7 @@ async function checkForPendingPRs() {
 }
 
 console.log('## env', process.env.NODE_ENV);
-if (process.env.NODE_ENV === 'PROD'){
+if (process.env.NODE_ENV === 'PROD' || process.env.NODE_ENV === 'production'){
   console.log('## starting checkForPendingPRs');
   checkForPendingPRs();
 }
