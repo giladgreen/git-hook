@@ -1,7 +1,7 @@
 const express = require('express');
+
 const router = express.Router();
 const lazuz = require('../services/lazuz.util');
-const config = require("../config");
 
 router.post('/request-sms', async function(req, res, next) {
   try {

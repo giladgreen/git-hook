@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+
 const app = express();
 const port = process.env.PORT || 3000;
 const gitRouter = require('./routes/git');
 const slackRouter = require('./routes/slack');
 const lazuzRouter = require('./routes/lazuz');
+const path = require("path");
 
 //https://git-hook-6aeb02160f71.herokuapp.com/git
 app.use(bodyParser.json());
@@ -13,6 +15,9 @@ app.use(
     extended: true,
   })
 );
+
+app.use(express.static(__dirname + '/public'));
+
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
 app.get('/', (req, res) => {
@@ -22,6 +27,9 @@ app.get('/', (req, res) => {
 app.use('/git', gitRouter);
 app.use('/slack', slackRouter);
 app.use('/lazuz', lazuzRouter);
+app.get('/lazuz', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {

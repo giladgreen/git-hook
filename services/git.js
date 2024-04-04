@@ -184,7 +184,11 @@ async function checkForPendingPRs() {
   }))
 }
 
-// checkForPendingPRs();
+console.log('## env', process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'PROD'){
+  console.log('## starting checkForPendingPRs');
+  checkForPendingPRs();
+}
 
 setInterval(checkForPendingPRs, 2 * HOUR);
 
