@@ -199,10 +199,6 @@ function wrapWithHtml(results){
 </head>
 <style>
 
-    body {
-        font-size: -webkit-xxx-large;
-    }
-
     th, td {
       border:1px solid black;
       text-align: left;
