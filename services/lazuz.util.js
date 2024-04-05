@@ -118,6 +118,15 @@ const DAYS = {
     6: 'שישי',
     7: 'שבת'
 }
+const ENGLISH_DAYS_MAPPING = {
+    1: 'Sunday',
+    2: 'Monday',
+    3: 'Tuesday',
+    4: 'Wednesday',
+    5: 'Thursday',
+    6: 'Friday',
+    7: 'Saturday'
+}
 const daysMapping = {
     "1": 6,
     "2": 5,
@@ -127,6 +136,15 @@ const daysMapping = {
     "6": 8,
     "7": 7,
 }
+function getDateCell(date){
+    const dateParts = date.split('-');
+    const day = dateParts[2];
+    const month = dateParts[1];
+    const year = dateParts[0];
+    const dayOfTheWeek = new Date(`${month}/${day}/${year}`).getDay() + 1;
+    return `<div><div>${DAYS[dayOfTheWeek]} </div><div>${day}/${month}</div></div>`;
+}
+
 function getDates(){
     const today = new Date();
     const todayDayOfTheWeek = today.getDay() + 1; //1 - 7
@@ -152,15 +170,8 @@ function getDates(){
 
 }
 
-function getDateCell(date){
-    const dateParts = date.split('-');
-    const day = dateParts[2];
-    const month = dateParts[1];
-    const year = dateParts[0];
-    const dayOfTheWeek = new Date(`${month}/${day}/${year}`).getDay() + 1;
-    return `<div><div>${DAYS[dayOfTheWeek]} </div><div>${day}/${month}</div></div>`;
 
-}
+
 const tempResults =  {
     '2024-04-05': [],
     '2024-04-07': [
@@ -208,6 +219,7 @@ function wrapWithHtml(results){
 
 </style>
 <body>
+<h3>Server time: <b>${(new Date()).toString()}</b></h3>
 <h1><u>Search Results:</u></h1>
 <table>
   <tr>
