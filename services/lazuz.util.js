@@ -199,7 +199,7 @@ const tempResults =  {
     '2024-04-12': []
 }
 
-function wrapWithHtml(results){
+function wrapWithHtml(results, include){
 
     console.log('## results', results)
 
@@ -251,6 +251,8 @@ function wrapWithHtml(results){
       </div>`;
     }).join('')}
 </table>
+${EMPTY_LINE}
+${include ? '' : `to also search for 21:00 <a href="https://git-hook-6aeb02160f71.herokuapp.com/lazuz/search?include=true">click here</a>`}
 </body>
 </html>
 `
@@ -258,7 +260,7 @@ function wrapWithHtml(results){
 
 async function search(include) {
    await refreshAccessToken();
-   const dates = getDates();
+   const dates = [];getDates();
    const results = [];
    for (let i=0; i< dates.length; i++){
         const date = dates[i];
@@ -294,7 +296,7 @@ async function search(include) {
         }
     }
 
-    const html = wrapWithHtml(results);
+    const html = wrapWithHtml(results, include);
     console.log('## html', html)
     return html;
 }
