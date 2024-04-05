@@ -24,20 +24,20 @@ const options = {
 }
 
 const PREFERED_HOURS = ["19:00:00", "20:00:00", "21:00:00"];
+const HOURS_COLORS = {
+    "19:00:00": 'palegreen',
+    "20:00:00": 'aquamarine',
+    "21:00:00": 'coral',
+}
 
 const CLUBS = {
-    "54": "TLV - COUNTRY DEKEL",
-    "139": "TLV - ROKAH 67",
-    "106": "RAMAT-GAN, ROKAH 121",
-    "66": "TLV - ROKAH 4",
+    "54": "קנטרי דקל",
+    "139": "רוקח 67 תל אביב",
+    "106": "רוקח 121 רמת גן",
+    "66": "רוקח 4 תל אביב",
 }
 const CLUB_IDS='139,54,106,66'
-const backgroundColorByClub = {
-    "54": "aquamarine",
-    "139": "blanchedalmond",
-    "106": "coral",
-    "66": "gainsboro",
-}
+
 async function sendSms(body) {
     if (!body.phone || !body.name){
         throw new Error ('phone & name are required');
@@ -118,15 +118,7 @@ const DAYS = {
     6: 'שישי',
     7: 'שבת'
 }
-const ENGLISH_DAYS_MAPPING = {
-    1: 'Sunday',
-    2: 'Monday',
-    3: 'Tuesday',
-    4: 'Wednesday',
-    5: 'Thursday',
-    6: 'Friday',
-    7: 'Saturday'
-}
+
 const daysMapping = {
     "1": 6,
     "2": 5,
@@ -136,13 +128,22 @@ const daysMapping = {
     "6": 8,
     "7": 7,
 }
+const EMPTY_LINE = '<div style="color: transparent">.</div>'
 function getDateCell(date){
     const dateParts = date.split('-');
     const day = dateParts[2];
     const month = dateParts[1];
     const year = dateParts[0];
     const dayOfTheWeek = new Date(`${month}/${day}/${year}`).getDay() + 1;
-    return `<div><div>${DAYS[dayOfTheWeek]} </div><div>${day}/${month}</div></div>`;
+    return `<h2><span style="margin: 0 6px">${DAYS[dayOfTheWeek]} </span> <span style="margin: 0 6px">${day}/${month}</span></h2>`;
+}
+function getDateHebrewDay(date){
+    const dateParts = date.split('-');
+    const day = dateParts[2];
+    const month = dateParts[1];
+    const year = dateParts[0];
+    const dayOfTheWeek = new Date(`${month}/${day}/${year}`).getDay() + 1;
+    return DAYS[dayOfTheWeek];
 }
 
 function getDates(){
@@ -221,41 +222,33 @@ function wrapWithHtml(results){
 <body>
 <h3>Server time: <b>${(new Date()).toString()}</b></h3>
 <h1><u>Search Results:</u></h1>
-<table>
-  <tr>
-    <th>Date</th>
-    <th>Club</th>
-    <th>Free Hours</th>
-  </tr>
+
   ${Object.keys(results).map(date => {
-      const dateItems = results[date];
-      const clubs = Array.from(new Set(dateItems.map(data => data.club)));
-      const clubHoursCount = {};
-      dateItems.forEach(data =>{
-          if (!clubHoursCount[data.club]){
-              clubHoursCount[data.club] = 0;
-          }
-          clubHoursCount[data.club]++;
-      })
-        //backgroundColorByClub
-      const clubsData = clubs.map(club => {
-            const clubRosToOccupy = clubHoursCount[club];
-            const newLines = Array(clubRosToOccupy).fill('<div style="color: transparent">.</div>').join('');
-            return `<div style="background-color: ${backgroundColorByClub[club]}">${CLUBS[club]}${newLines}</div>`;
-      }).join('');
-      
-      const hoursData = clubs.map(club => {
-          const clubHours = dateItems.filter(data => data.club === club).map(data => data.hour);
-          return clubHours.map(hour => `<div style="background-color: ${backgroundColorByClub[club]}">${hour}</div>`).join('');
-      }).join('<br>')
-     
-      
-     return `<tr>
-        <th>${getDateCell(date)}</th>
-        <th>${clubsData}</th>
-        <th>${hoursData}</th>
-      </tr>`;
-      
+        const dateItems = results[date];
+        if (dateItems.length === 0){
+            return `<div></div>`;
+        }
+        
+        const clubs = Array.from(new Set(dateItems.map(data => data.club)));
+        return `
+      <div>
+          <div>${getDateCell(date)}</div>
+          ${clubs.map(club => `
+          <table>
+              <tr>
+                <th style="background-color: blanchedalmond">${CLUBS[club]}</th>
+              </tr>
+              ${
+             dateItems.filter(data => data.club === club).map(data => `
+              <tr>
+                <th style="background-color: ${HOURS_COLORS[data.hour]}">${getDateHebrewDay(date)} ${data.hour}</th>
+              </tr>
+             `).join(EMPTY_LINE)
+                }
+            
+           </table>
+          `).join(EMPTY_LINE)}
+      </div>`;
     }).join('')}
 </table>
 </body>
@@ -263,10 +256,10 @@ function wrapWithHtml(results){
 `
 }
 
-async function search() {
+async function search(include) {
    await refreshAccessToken();
    const dates = getDates();
-   const results = [];// tempResults;
+   const results = [];
    for (let i=0; i< dates.length; i++){
         const date = dates[i];
         results[date] = [];
@@ -287,7 +280,8 @@ async function search() {
                 if (!club?.availableSlots || !Array.isArray(club.availableSlots)){
                     return;
                 }
-                PREFERED_HOURS.forEach(hour => {
+                const hoursToUse = include ? PREFERED_HOURS : PREFERED_HOURS.filter(h => h !== '21:00:00');
+                hoursToUse.forEach(hour => {
                     if (club.availableSlots.includes(hour)){
                         results[date].push({ club: club.club_id, hour });
                     }

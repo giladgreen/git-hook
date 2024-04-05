@@ -24,7 +24,7 @@ router.post('/setup-token', async function(req, res, next) {
 
 router.get('/search', async function(req, res, next) {
   try {
-    res.send(await lazuz.search());
+    res.send(await lazuz.search(req?.query?.include));
   } catch (err) {
     console.error(`Error while processing request`, err.message);
     next(err);
