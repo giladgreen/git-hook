@@ -260,7 +260,7 @@ ${include ? '' : `to also search for 21:00 <a href="https://git-hook-6aeb02160f7
 
 async function search(include) {
    await refreshAccessToken();
-   const dates = [];getDates();
+   const dates = getDates();
    const results = [];
    for (let i=0; i< dates.length; i++){
         const date = dates[i];
