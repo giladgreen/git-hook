@@ -67,6 +67,36 @@ async function getAllPRs() {
   return await query('SELECT * FROM prs', []);
 }
 
+async function createTokens(token, refreshToken) {
+  await query(
+      `INSERT INTO tokens
+    (token_type, token)
+    VALUES
+    (?, ?)`,
+      ['token', token]
+  );
+
+  return await query(
+      `INSERT INTO tokens
+    (token_type, token)
+    VALUES
+    (?, ?)`,
+      ['refreshToken', refreshToken]
+  );
+}
+async function updateToken(token) {
+  return query(
+      `UPDATE tokens SET token=? WHERE token_type = ?`,
+      [
+        token,
+        'token'
+      ]
+  );
+}
+async function getTokens() {
+  return await query('SELECT * FROM tokens', []);
+}
+
 module.exports = {
   createPR,
   getPR,
@@ -74,5 +104,8 @@ module.exports = {
   updatePrLastReminder,
   getOldPRs,
   getAllPRs,
-  markPRasDelete
+  markPRasDelete,
+  createTokens,
+  getTokens,
+  updateToken
 }
