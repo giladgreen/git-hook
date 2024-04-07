@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const lazuz = require('../services/lazuz.util');
+const lazuz = require('../services/lazuz');
 
 router.post('/request-sms', async function(req, res, next) {
   try {
@@ -24,7 +24,29 @@ router.post('/setup-token', async function(req, res, next) {
 
 router.get('/search', async function(req, res, next) {
   try {
-    res.send(await lazuz.search(req?.query?.include));
+    const localHost =req.rawHeaders.includes('localhost:3000');
+    res.send(await lazuz.search(localHost, req?.query?.include));
+  } catch (err) {
+    console.error(`Error while processing request`, err.message);
+    next(err);
+  }
+});
+
+
+router.get('/make', async function(req, res, next) {
+  try {
+    await lazuz.makeReservation(req?.query?.club, req?.query?.date, req?.query?.hour);
+    res.send(await lazuz.search(false));
+  } catch (err) {
+    console.error(`Error while processing request`, err.message);
+    next(err);
+  }
+});
+
+router.get('/cancel', async function(req, res, next) {
+  try {
+    await lazuz.cancelReservation(req?.query?.reservation);
+    res.send(await lazuz.search(false));
   } catch (err) {
     console.error(`Error while processing request`, err.message);
     next(err);

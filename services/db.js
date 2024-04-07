@@ -69,20 +69,20 @@ async function getAllPRs() {
 
 async function createTokens(token, refreshToken) {
   await query(
-      `INSERT INTO tokens
-    (token_type, token)
-    VALUES
-    (?, ?)`,
-      ['token', token]
+      `UPDATE tokens SET token=? WHERE token_type = ?`,
+      [
+        token,
+        'token'
+      ]
   );
 
-  return await query(
-      `INSERT INTO tokens
-    (token_type, token)
-    VALUES
-    (?, ?)`,
-      ['refreshToken', refreshToken]
+  await query(
+      `UPDATE tokens SET token=? WHERE token_type = ?`,
+      [
+        'refreshToken', refreshToken
+      ]
   );
+
 }
 async function updateToken(token) {
   return query(
