@@ -85,13 +85,13 @@ function getHoursSection(localHost, club, dateItems, date){
            <th style="background-color: ${HOURS_COLORS[data.hour]}">${getDateHebrewDay(date)} ${data.hour}</th>
 <!--           <th> <a href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/make?club=${club}&date=${date}&hour=${data.hour}">Make Reservation</a></th>-->
         </tr>
-        `).join(EMPTY_LINE)
+        `).join('')
 }
 function getHtmlResultsSection(localHost, results){
     return Object.keys(results).map(date => {
         const dateItems = results[date];
         if (dateItems.length === 0){
-          return EMPTY_LINE;
+          return '';
         }
 
         const clubs = Array.from(new Set(dateItems.map(data => data.club)));
@@ -105,26 +105,34 @@ function getHtmlResultsSection(localHost, results){
 <!--                    <th style="background-color: blanchedalmond"></th>-->
                   </tr>
                   ${getHoursSection(localHost, club, dateItems, date)}
+                  ${EMPTY_LINE}
                </table>
-              `).join(EMPTY_LINE)}
+              `).join('')}
           </div>`;
     }).join('');
 }
 
 function getReservationsSection(localHost, reservations) {
     if (!reservations || reservations.length === 0){
-        return '';
+        return ' <h1><u>No Reservations</u></h1>';
     }
-
+    const getDateName = (reservation) => {
+        const day =  getDateText(reservation.start_date).day;
+        return `יום ${day} `;
+    }
     const section = `
-    <h1><u>Your Reservations:</u></h1>
+    <h1><u>הזמנות קיימות (${reservations.length}): </u></h1>
     ${reservations.map(reservation => `
         <div>
-         
             <h2 style="background-color: blanchedalmond">
-            ${CLUBS[reservation.club_id]+', '+getDateText(reservation.start_date).day+', '+getDateText(reservation.start_date).shortDate +', '+reservation.start_time} 
+            ${CLUBS[reservation.club_id] +
+            ','+
+            getDateName(reservation) +
+             ` (${getDateText(reservation.start_date).shortDate}) `+
+           'בשעה '+
+            (reservation.start_time).toString().substring(0,5)} 
             </h2>
-           <a style="background-color: orange" href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/cancel?reservation=${reservation.id}">Cancel Reservation</a>
+           <a style="background-color: sandybrown" href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/cancel?reservation=${reservation.id}">Cancel Reservation</a>
            ${EMPTY_LINE}
         </div>
         `).join(EMPTY_LINE)}
@@ -148,24 +156,35 @@ function wrapWithHtml(localHost, reservations, results, include){
     <title>Tennis court search</title>
 </head>
 <style>
+body{
+    direction: rtl;
+}
+table{
+width: 100%;
+}
     th, td {
       border:1px solid black;
-      text-align: left;
       vertical-align: top;
       padding: 8px;
+      direction: rtl;
+      text-align: start;
     }
 </style>
 <body>
-<h4>Server time: <b>${(new Date()).toString()}</b></h4>
-${EMPTY_LINE}
+
 ${getReservationsSection(localHost, reservations)}
 <hr/>
-${EMPTY_LINE}
-<h1><u>Search Results:</u></h1>
+<h1><u>תוצאות חיפוש</u></h1>
   ${getHtmlResultsSection(localHost, results)}
-</table>
+
 ${EMPTY_LINE}
-${include ? '' : `to also search for 21:00 <a href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/search?include=true">click here</a>`}
+${EMPTY_LINE}
+${EMPTY_LINE}
+${include ? '' : `to also search for later hours <a href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/search?include=true">click here</a>`}
+${EMPTY_LINE}
+${EMPTY_LINE}
+<h5>Server time: <b>${(new Date()).toString()}</b></h5>
+
 </body>
 </html>
 `

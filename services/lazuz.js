@@ -161,7 +161,7 @@ async function getSearchResults(dates,include) {
             if (!club?.availableSlots || !Array.isArray(club.availableSlots)){
                 return;
             }
-            const hoursToUse = include ? PREFERRED_HOURS : PREFERRED_HOURS.filter(h => h !== '21:00:00');
+            const hoursToUse = include ? PREFERRED_HOURS : PREFERRED_HOURS.filter(h => h === '19:00:00');
             hoursToUse.forEach(hour => {
                 if (club.availableSlots.includes(hour)){
                     results[date].push({ club: club.club_id, hour });
