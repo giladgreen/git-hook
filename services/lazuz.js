@@ -264,7 +264,8 @@ async function search(localHost, include) {
     ]);
 
     const html = wrapWithHtml(localHost, reservations, results, include);
-
+console.log('## HTML')
+console.log(html)
     return html;
 }
 

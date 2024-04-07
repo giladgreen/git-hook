@@ -105,7 +105,7 @@ function getHtmlResultsSection(localHost, results){
 <!--                    <th style="background-color: blanchedalmond"></th>-->
                   </tr>
                   ${getHoursSection(localHost, club, dateItems, date)}
-                  ${EMPTY_LINE}
+                 
                </table>
               `).join('')}
           </div>`;
@@ -124,21 +124,21 @@ function getReservationsSection(localHost, reservations) {
     <h1><u>הזמנות קיימות (${reservations.length}): </u></h1>
     ${reservations.map(reservation => `
         <div>
-            <h2 style="background-color: blanchedalmond">
-            ${CLUBS[reservation.club_id] +
-            ','+
-            getDateName(reservation) +
-             ` (${getDateText(reservation.start_date).shortDate}) `+
-           'בשעה '+
-            (reservation.start_time).toString().substring(0,5)} 
-            </h2>
-           <a style="background-color: sandybrown" href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/cancel?reservation=${reservation.id}">Cancel Reservation</a>
+           <div style="background-color: blanchedalmond">
+           <div>
+              ${CLUBS[reservation.club_id]}, ${ getDateName(reservation)} (${getDateText(reservation.start_date).shortDate})
+            </div>
+            <div>
+              בשעה  ${(reservation.start_time).toString().substring(0,5)} 
+            </div>
+             ${EMPTY_LINE}
+           <a style="background-color: sandybrown" href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/cancel?reservation=${reservation.id}">ביטול ההזמנה</a>
            ${EMPTY_LINE}
         </div>
         `).join(EMPTY_LINE)}
     </table>
     `;
-    console.log('## reservations section', section)
+    // console.log('## reservations section', section)
 
     return section;
 }
