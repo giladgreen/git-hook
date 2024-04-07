@@ -110,9 +110,10 @@ async function refreshAccessToken(){
     }
 }
 
-async function getUserReservations(dates){
+async function getUserReservations(){
     try {
-        const reservationsResponse = await axios.get(`https://server.lazuz.co.il/users/reservations/?start=${dates[0]}&end=${dates[dates.length-1]}`, {
+        const currentYear = (new Date()).getFullYear();
+        const reservationsResponse = await axios.get(`https://server.lazuz.co.il/users/reservations/?start=${currentYear}-01-01&end=${currentYear}-12-31`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'User-Agent': 'Node/12.14.1'

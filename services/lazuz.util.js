@@ -38,10 +38,30 @@ const translations = {
     orderCourt: 'הזמן מגרש',
    day: 'יום',
     existingReservations: 'הזמנות קיימות',
+    doneReservations: 'הזמנות שהסתיימו',
+    totalCost: 'עלות כוללת',
     cancelReservation: 'ביטול הזמנה',
     searchResults: 'תוצאות חיפוש',
     pressHere: 'לחץ כאן',
     toSeeMoreResults: 'לתוצאות נוספות -',
+    atHour: 'בשעה',
+    shekels: 'ש"ח',
+    noReservations: 'אין הזמנות',
+    reservations: 'הזמנות',
+    january: 'ינואר',
+    february: 'פברואר',
+    march: 'מרץ',
+    april: 'אפריל',
+    may: 'מאי',
+    june: 'יוני',
+    july: 'יולי',
+    august: 'אוגוסט',
+    september: 'ספטמבר',
+    october: 'אוקטובר',
+    november: 'נובמבר',
+    december: 'דצמבר',
+    pastReservationsSummary: 'סיכום הזמנות שהסתיימו',
+
 }
 
 function getDateText(date){
@@ -87,7 +107,10 @@ function getDates(){
     return dates;
 
 }
-
+function getDateName(reservation) {
+    const day =  getDateText(reservation.start_date).day;
+    return `${translations.day} ${day} `;
+}
 function getHoursSection(localHost, club, dateItems, date){
     return dateItems.filter(data => data.club === club).map(data => `
         <tr>
@@ -122,14 +145,62 @@ function getHtmlResultsSection(localHost, results){
     }).join('');
 }
 
-function getReservationsSection(localHost, reservations) {
+function getMonthReservationsSection(monthReservationsObject) {
+   return `
+    <h1><u>${translations.reservations} ${translations[monthReservationsObject.name.toLowerCase()]}  (${monthReservationsObject.reservations.length}): ${monthReservationsObject.totalCost} ${translations.shekels}</u></h1>
+
+    ${monthReservationsObject.reservations.map(reservation => `
+        <div>
+           <div style="background-color: blanchedalmond">
+           <div>
+              ${CLUBS[reservation.club_id]}, ${ getDateName(reservation)} (${getDateText(reservation.start_date).shortDate})
+            </div>
+            <div>
+              ${translations.atHour}  ${(reservation.start_time).toString().substring(0,5)} 
+            </div>
+             <div>
+            ${reservation.price} ${translations.shekels}
+            </div>
+          
+        </div>
+        `).join(EMPTY_LINE)}
+   
+    `;
+}
+function getPastReservationsSection(reservations) {
     if (!reservations || reservations.length === 0){
-        return ' <h1><u>No Reservations</u></h1>';
+        return '';
     }
-    const getDateName = (reservation) => {
-        const day =  getDateText(reservation.start_date).day;
-        return `${translations.day} ${day} `;
+
+    const reservationsByMonth = reservations.reduce((acc, curr) => {
+        const month = curr.start_date.substring(6,7);
+        if (!acc[month]){
+            acc[month] = [];
+        }
+        acc[month].push(curr);
+        return acc;
+    },{});
+    const currentYear = (new Date()).getFullYear();
+    const reservationsByMonths = Object.keys(reservationsByMonth).map(month=>{
+        return {
+            name: new Date(`${currentYear}-${month}-01`).toLocaleString('default', { month: 'long' }),
+            reservations: reservationsByMonth[month],
+            totalCost: reservationsByMonth[month].reduce((acc, curr) => acc + curr.price, 0)
+        }
+    });
+    reservationsByMonths.reverse();
+    return `
+        <div><u><b>${translations.pastReservationsSummary}</b></u></div>
+        ${reservationsByMonths.map(getMonthReservationsSection).join(EMPTY_LINE)}
+        `
+}
+function getFutureReservationsSection(localHost, reservations) {
+    if (!reservations || reservations.length === 0){
+        return ' <h1><u>${translations.noReservations}</u></h1>';
     }
+
+
+
     const section = `
     <h1><u>${translations.existingReservations} (${reservations.length}): </u></h1>
     ${reservations.map(reservation => `
@@ -139,21 +210,27 @@ function getReservationsSection(localHost, reservations) {
               ${CLUBS[reservation.club_id]}, ${ getDateName(reservation)} (${getDateText(reservation.start_date).shortDate})
             </div>
             <div>
-              בשעה  ${(reservation.start_time).toString().substring(0,5)} 
+              ${translations.atHour}  ${(reservation.start_time).toString().substring(0,5)} 
+            </div>
+            <div>
+            ${reservation.cTitle}
+            </div>
+             <div>
+            ${reservation.price} ${translations.shekels}
             </div>
              ${EMPTY_LINE}
            <a style="background-color: sandybrown" href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/cancel?reservation=${reservation.id}">${translations.cancelReservation}</a>
            ${EMPTY_LINE}
         </div>
         `).join(EMPTY_LINE)}
-    </table>
     `;
-    // console.log('## reservations section', section)
 
     return section;
 }
 function wrapWithHtml(localHost, reservations, results, include){
 
+    const pastReservations = reservations.filter(reservation => new Date(reservation.start_date) < new Date());
+    const futureReservations = reservations.filter(reservation => new Date(reservation.start_date) >= new Date());
     console.log('## localHost', localHost)
     console.log('## reservations', reservations)
     console.log('## results', results)
@@ -182,13 +259,15 @@ width: 100%;
     }
 </style>
 <body>
-
-${getReservationsSection(localHost, reservations)}
+${getFutureReservationsSection(localHost, futureReservations)}
 <hr/>
 <h1><u>${translations.searchResults}</u></h1>
   ${getHtmlResultsSection(localHost, results)}
 
 ${EMPTY_LINE}
+
+${getPastReservationsSection(pastReservations)}
+
 ${EMPTY_LINE}
 ${EMPTY_LINE}
 ${include ? '' : `${translations.toSeeMoreResults} <a href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/search?include=true">${translations.pressHere}</a>`}
