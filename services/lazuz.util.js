@@ -40,6 +40,8 @@ const translations = {
     existingReservations: 'הזמנות קיימות',
     cancelReservation: 'ביטול הזמנה',
     searchResults: 'תוצאות חיפוש',
+    pressHere: 'לחץ כאן',
+    toSeeMoreResults: 'לתוצאות נוספות -',
 }
 
 function getDateText(date){
@@ -166,6 +168,7 @@ function wrapWithHtml(localHost, reservations, results, include){
 <style>
 body{
     direction: rtl;
+        font-size: xx-large;
 }
 table{
 width: 100%;
@@ -188,7 +191,7 @@ ${getReservationsSection(localHost, reservations)}
 ${EMPTY_LINE}
 ${EMPTY_LINE}
 ${EMPTY_LINE}
-${include ? '' : `to also search for later hours <a href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/search?include=true">click here</a>`}
+${include ? '' : `${translations.toSeeMoreResults} <a href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/search?include=true">${translations.pressHere}</a>`}
 ${EMPTY_LINE}
 ${EMPTY_LINE}
 <h5>Server time: <b>${(new Date()).toString()}</b></h5>
