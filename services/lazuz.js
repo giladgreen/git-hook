@@ -180,7 +180,13 @@ async function actualReservationCall(requestBody) {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
-                    'User-Agent': 'Node/12.14.1'
+                    'User-Agent': 'Node/12.14.1',
+                    'Accept': 'application/json, text/plain, */*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    'Accept-Language': 'en-US,en;q=0.9',
+                    'Connection': 'keep-alive',
+                    'Host':'server.lazuz.co.il',
+                    'X-Requested-With': 'com.lazuz.clientapp'
                 }
             });
             console.log('## booked with price:',price)
@@ -198,8 +204,8 @@ async function makeReservation(club, date, hour) {
     }
     try {
         await refreshAccessToken();
-        const start_time = hour;
-        const end_time = getNextHour(hour);
+        const start_time = hour.substring(0,5);
+        const end_time = getNextHour(hour).substring(0,5);
 
         const requestBody = {
             reservation: {

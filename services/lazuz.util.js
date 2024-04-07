@@ -34,6 +34,13 @@ const daysMapping = {
     "7": 7,
 }
 const EMPTY_LINE = '<div style="color: transparent">.</div>'
+const translations = {
+    orderCourt: 'הזמן מגרש',
+   day: 'יום',
+    existingReservations: 'הזמנות קיימות',
+    cancelReservation: 'ביטול הזמנה',
+    searchResults: 'תוצאות חיפוש',
+}
 
 function getDateText(date){
     const dateParts = date.split('-');
@@ -82,8 +89,10 @@ function getDates(){
 function getHoursSection(localHost, club, dateItems, date){
     return dateItems.filter(data => data.club === club).map(data => `
         <tr>
-           <th style="background-color: ${HOURS_COLORS[data.hour]}">${getDateHebrewDay(date)} ${data.hour}</th>
-<!--           <th> <a href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/make?club=${club}&date=${date}&hour=${data.hour}">Make Reservation</a></th>-->
+           <th style="background-color: ${HOURS_COLORS[data.hour]}">
+                ${getDateHebrewDay(date)} ${data.hour}
+                <a style="margin: 0 10px" href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/make?club=${club}&date=${date}&hour=${data.hour}">${translations.orderCourt}</a>
+            </th> 
         </tr>
         `).join('')
 }
@@ -102,7 +111,6 @@ function getHtmlResultsSection(localHost, results){
               <table>
                   <tr>
                     <th style="background-color: blanchedalmond">${CLUBS[club]}</th>
-<!--                    <th style="background-color: blanchedalmond"></th>-->
                   </tr>
                   ${getHoursSection(localHost, club, dateItems, date)}
                  
@@ -118,10 +126,10 @@ function getReservationsSection(localHost, reservations) {
     }
     const getDateName = (reservation) => {
         const day =  getDateText(reservation.start_date).day;
-        return `יום ${day} `;
+        return `${translations.day} ${day} `;
     }
     const section = `
-    <h1><u>הזמנות קיימות (${reservations.length}): </u></h1>
+    <h1><u>${translations.existingReservations} (${reservations.length}): </u></h1>
     ${reservations.map(reservation => `
         <div>
            <div style="background-color: blanchedalmond">
@@ -132,7 +140,7 @@ function getReservationsSection(localHost, reservations) {
               בשעה  ${(reservation.start_time).toString().substring(0,5)} 
             </div>
              ${EMPTY_LINE}
-           <a style="background-color: sandybrown" href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/cancel?reservation=${reservation.id}">ביטול ההזמנה</a>
+           <a style="background-color: sandybrown" href="${localHost ? LOCAL_URL : SERVER_URL}/lazuz/cancel?reservation=${reservation.id}">${translations.cancelReservation}</a>
            ${EMPTY_LINE}
         </div>
         `).join(EMPTY_LINE)}
@@ -174,7 +182,7 @@ width: 100%;
 
 ${getReservationsSection(localHost, reservations)}
 <hr/>
-<h1><u>תוצאות חיפוש</u></h1>
+<h1><u>${translations.searchResults}</u></h1>
   ${getHtmlResultsSection(localHost, results)}
 
 ${EMPTY_LINE}
