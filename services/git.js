@@ -20,7 +20,30 @@ const {
   removeReactToSlackMessage,
   reactToSlackMessage } = require("./slack.util");
 
+const neggingHandlers = {};
 
+async function startNegging(repo, prNumber) {
+  const pr = await db.getPR(repo, prNumber);
+  if (pr) {
+    const id = pr.id;
+    const messageId = pr.slack_message_id;
+    const slackMessage = 'This PR is still waiting for a review..';
+    replayToSlackMessage(messageId, slackMessage);
+    neggingHandlers[id] = setInterval(() => {
+      replayToSlackMessage(messageId, slackMessage);
+    }, 15 * 60 * 1000);
+  }
+}
+async function stopNegging(repo, prNumber) {
+  const pr = await db.getPR(repo, prNumber);
+  if (pr) {
+    const id = pr.id;
+    if (neggingHandlers[id]){
+      clearInterval(neggingHandlers[id]);
+      neggingHandlers[id] = null;
+    }
+  }
+}
 async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc, extra) {
   const tags = getTags(repo, creator);
   const description = getDescription(desc);
@@ -30,6 +53,8 @@ async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, de
   const messageId = await sendSlackMessage(slackMessage);
   await db.createPR(title, creator, repo, prNumber, tags, new Date(), messageId);
 }
+
+
 
 async function processReadyToReviewLabelRemoved(repo, prNumber) {
   const pr = await db.getPR(repo, prNumber);
@@ -136,6 +161,14 @@ async function processPREvent(body) {
 
   if (action === 'unlabeled' && label?.name === 'Ready to review') {
     return await processReadyToReviewLabelRemoved(repo, prNumber);
+  }
+
+  if (action === 'labeled' && label?.name === 'neg') {
+    return await startNegging(repo, prNumber);
+  }
+
+  if (action === 'unlabeled' && label?.name === 'neg') {
+    return await stopNegging(repo, prNumber);
   }
 
   if (action === 'closed') {
