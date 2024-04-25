@@ -196,7 +196,7 @@ function getPastReservationsSection(reservations) {
 }
 function getFutureReservationsSection(localHost, reservations) {
     if (!reservations || reservations.length === 0){
-        return ' <h1><u>${translations.noReservations}</u></h1>';
+        return ` <h1><u>${translations.noReservations}</u></h1>`;
     }
 
 
