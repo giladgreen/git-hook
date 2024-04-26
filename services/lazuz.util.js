@@ -296,7 +296,8 @@ ${EMPTY_LINE}
 
 </body>
 <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
-    setTimeout(()=>{
+    setInterval(()=>{
+      try{
         const collection = document.getElementsByClassName('eapp-weather-daily-item-max');
         for (let i =0; i<7; i++) {
             const temparture = parseInt(collection[i].innerHTML);
@@ -308,6 +309,9 @@ ${EMPTY_LINE}
                  collection[i].classList.add("prefect");
             }
         }
+      }catch(e){
+         console.error(e)
+      }
     },3000)
 
 </script>
