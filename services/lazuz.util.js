@@ -192,8 +192,9 @@ function getPastReservationsSection(reservations) {
         }
     });
     reservationsByMonths.reverse();
+    const totalCost = reservations.reduce((acc, curr) => acc + curr.price, 0);
     return `
-        <div><u><b>${translations.pastReservationsSummary}</b></u></div>
+        <div><u><b>${translations.pastReservationsSummary} (${totalCost})</b></u></div>
         ${reservationsByMonths.map(getMonthReservationsSection).join(EMPTY_LINE)}
         `
 }
