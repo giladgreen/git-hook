@@ -304,6 +304,8 @@ ${EMPTY_LINE}
                 collection[i].classList.add("too-hot");
             } else if (temparture < 17){
                 collection[i].classList.add("too-cold");
+            }else{
+                 collection[i].classList.add("prefect");
             }
         }
     },3000)
