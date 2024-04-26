@@ -238,14 +238,11 @@ function wrapWithHtml(localHost, reservations, results, include){
     console.log('  ## nowInIsrael',nowInIsrael)
 
     const getReservationExactTime = (reservation) => {
-        const date = new Date(reservation.start_date);
         const time = new Date(`${reservation.start_date}T${reservation.end_time}`);
         console.log('  ## reservation.start_date:', reservation.start_date)
         console.log('  ## reservation.end_time:', reservation.end_time)
         console.log('  ## time:', time)
-        console.log('  ## getReservationExactTime:', new Date(date.getTime() + time.getTime()))
-        return new Date(date.getTime() + time.getTime());
-
+        return time;
     }
 /*
  start_date: '2024-01-07',
