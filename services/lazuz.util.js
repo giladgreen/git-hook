@@ -245,12 +245,8 @@ function wrapWithHtml(localHost, reservations, results, include){
     <title>Tennis court search</title>
 </head>
 <style>
-body{
-    direction: rtl;
-        font-size: xx-large;
-}
 table{
-width: 100%;
+ width: 100%;
 }
 th, td {
   border:1px solid black;
@@ -259,17 +255,26 @@ th, td {
   direction: rtl;
   text-align: start;
 }
-
-.elfsight-app-e04da7d5-bc97-4e49-beed-0c664cf9ea47{
+.wether-widget {
    position: fixed;
    top: 0;
-   left:0
+   left:0;
+   z-index: 10;
 }
+.container {
+   position: absolute;
+   top: 0;
+   right:0;
+   direction: rtl;
+   font-size: xx-large;
+   z-index: 1;
+}
+
 </style>
 <body>
-<script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+ <div class="elfsight-app-e04da7d5-bc97-4e49-beed-0c664cf9ea47 wether-widget" data-elfsight-app-lazy></div>
 
-    <div className="elfsight-app-e04da7d5-bc97-4e49-beed-0c664cf9ea47" data-elfsight-app-lazy></div>
+ <div class="container" >
 
 ${getFutureReservationsSection(localHost, futureReservations)}
 <hr/>
@@ -287,7 +292,10 @@ ${EMPTY_LINE}
 ${EMPTY_LINE}
 <h5>Server time: <b>${(new Date()).toString()}</b></h5>
 
+</div>
+
 </body>
+<script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
 </html>
 `
 }
