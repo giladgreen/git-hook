@@ -112,6 +112,7 @@ async function refreshAccessToken(){
 
 async function getUserReservations(){
     try {
+        //TODO: get results for all years..
         const currentYear = (new Date()).getFullYear();
         const reservationsResponse = await axios.get(`https://server.lazuz.co.il/users/reservations/?start=${currentYear}-01-01&end=${currentYear}-12-31`, {
             headers: {
@@ -266,7 +267,7 @@ async function search(localHost, include) {
    const dates = getDates();
 
    const [reservations, results] = await Promise.all([
-        getUserReservations(dates),
+        getUserReservations(),
         (DEBUG_MODE ? getMockedSearchResults(dates, include) : getSearchResults(dates, include))
     ]);
 
