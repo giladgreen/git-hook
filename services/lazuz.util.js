@@ -296,7 +296,8 @@ ${EMPTY_LINE}
 
 </body>
 <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
-    setInterval(()=>{
+<script>
+    setTimeout(()=>{
       try{
         const collection = document.getElementsByClassName('eapp-weather-daily-item-max');
         for (let i =0; i<7; i++) {
@@ -312,7 +313,7 @@ ${EMPTY_LINE}
       }catch(e){
          console.error(e)
       }
-    },3000)
+    },3500)
 
 </script>
 </html>
