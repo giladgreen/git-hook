@@ -121,11 +121,13 @@ function getHoursSection(localHost, club, dateItems, date){
         </tr>
         `).join('')
 }
-function getHtmlResultsSection(localHost, results){
+
+
+function getHtmlResultsSection(localHost, results) {
     return Object.keys(results).map(date => {
         const dateItems = results[date];
-        if (dateItems.length === 0){
-          return '';
+        if (dateItems.length === 0) {
+            return '';
         }
 
         const clubs = Array.from(new Set(dateItems.map(data => data.club)));
@@ -250,15 +252,25 @@ body{
 table{
 width: 100%;
 }
-    th, td {
-      border:1px solid black;
-      vertical-align: top;
-      padding: 8px;
-      direction: rtl;
-      text-align: start;
-    }
+th, td {
+  border:1px solid black;
+  vertical-align: top;
+  padding: 8px;
+  direction: rtl;
+  text-align: start;
+}
+
+.elfsight-app-e04da7d5-bc97-4e49-beed-0c664cf9ea47{
+   position: fixed;
+   top: 0;
+   left:0
+}
 </style>
 <body>
+<script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+
+    <div className="elfsight-app-e04da7d5-bc97-4e49-beed-0c664cf9ea47" data-elfsight-app-lazy></div>
+
 ${getFutureReservationsSection(localHost, futureReservations)}
 <hr/>
 <h1><u>${translations.searchResults}</u></h1>
