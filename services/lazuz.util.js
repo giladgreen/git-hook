@@ -158,8 +158,9 @@ function getMonthReservationsSection(monthReservationsObject) {
               ${CLUBS[reservation.club_id]}, ${ getDateName(reservation)} (${getDateText(reservation.start_date).shortDate})
             </div>
             <div>
-              ${translations.atHour}  ${(reservation.start_time).toString().substring(0,5)} 
+              ${translations.atHour}  ${(reservation.start_time).toString().substring(0,5)}  ${reservation.cTitle}
             </div>
+          
              <div>
             ${reservation.price} ${translations.shekels}
             </div>
@@ -230,25 +231,12 @@ function getFutureReservationsSection(localHost, reservations) {
     return section;
 }
 function wrapWithHtml(localHost, reservations, results, include){
-    const now = new Date();
-    console.log('  ## wrapWithHtml')
-    console.log('  ## now',now)
-
-    const nowInIsrael = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Jerusalem"}));
-    console.log('  ## nowInIsrael',nowInIsrael)
+    const nowInIsrael = new Date((new Date()).toLocaleString("en-US", {timeZone: "Asia/Jerusalem"}));
 
     const getReservationExactTime = (reservation) => {
-        const time = new Date(`${reservation.start_date}T${reservation.end_time}`);
-        console.log('  ## reservation.start_date:', reservation.start_date)
-        console.log('  ## reservation.end_time:', reservation.end_time)
-        console.log('  ## time:', time)
-        return time;
+        return new Date(`${reservation.start_date}T${reservation.end_time}`);
     }
-/*
- start_date: '2024-01-07',
-2024-04-26T21:12:01.308813+00:00 app[web.1]:     end_date: '2024-01-07',
-2024-04-26T21:12:01.308813+00:00 app[web.1]:     start_time: '19:00:00',
- */
+
     const pastReservations = reservations.filter(reservation => getReservationExactTime(reservation) < nowInIsrael);
     const futureReservations = reservations.filter(reservation => getReservationExactTime(reservation) >= nowInIsrael);
     console.log('## localHost', localHost)

@@ -271,8 +271,7 @@ async function search(localHost, include) {
     ]);
 
     const html = wrapWithHtml(localHost, reservations, results, include);
-console.log('## HTML')
-console.log(html)
+
     return html;
 }
 
@@ -282,9 +281,7 @@ async function getTokensDataFromDB(){
     const rt = tokens.find(t => t.token_type === 'refreshToken');
     token = rt.token;
     refreshToken = t.token;
-    console.log('## got tokens')
-    console.log('## token:',token)
-    console.log('## refreshToken:',refreshToken)
+
 }
 getTokensDataFromDB();
 
