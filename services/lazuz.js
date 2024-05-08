@@ -120,6 +120,8 @@ async function getUserReservations(){
                 'User-Agent': 'Node/12.14.1'
             }
         });
+        console.log('## reservationsResponse.data:', reservationsResponse.data);
+
         return reservationsResponse.data.results || [];
     } catch(e){
         console.log('## error getting token:', e.message);
