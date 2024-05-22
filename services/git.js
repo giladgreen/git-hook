@@ -60,7 +60,7 @@ async function processContinuousLocalizationLabelAdded(prNumber) {
   const prUrl = `https://git.autodesk.com/BIM360/acs-schedule/pull/${prNumber}`;
   const slackMessage = getSlackMessageForNewPR(tags, 'Translator', prUrl, 'New Translation');
   const messageId = await sendSlackMessage(slackMessage);
-  await db.createPR('New Translation', 'Translator', CLIENT_REPO, prNumber, tags, new Date(), messageId);
+  await db.createPR('New Localizations', 'Localization Team', CLIENT_REPO, prNumber, tags, new Date(), messageId);
 }
 
 
