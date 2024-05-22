@@ -1,5 +1,5 @@
 const SERVER_REPO = 'schedule-service';
-export const CLIENT_REPO = 'acs-schedule';
+const CLIENT_REPO = 'acs-schedule';
 const PLAN_REPO = 'plan-classic-web';
 const EXTRATOR_REPO = 'schedule-extractor';
 const HOUR = (60 * 60 * 1000);
@@ -135,5 +135,6 @@ module.exports = {
     hasCustomDescription,
     getSlackMessageForNewPR,
     HOUR,
-    DAY
+    DAY,
+    CLIENT_REPO
 }

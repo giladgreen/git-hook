@@ -10,7 +10,7 @@ const {
   getTagName,
   getDescription,
   getSlackMessageForNewPR,
-  HOUR,
+  HOUR, CLIENT_REPO,
 } = require("./helpers");
 const {
   sendSlackMessage,
