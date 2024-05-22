@@ -55,6 +55,15 @@ async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, de
 }
 
 
+async function processContinuousLocalizationLabelAdded(prNumber) {
+  const tags = clientDevelopers.map(item => getTagName(item)).join(', ')
+  const prUrl = `https://git.autodesk.com/BIM360/acs-schedule/pull/${prNumber}`;
+  const slackMessage = getSlackMessageForNewPR(tags, 'Translator', prUrl, 'New Translation');
+  const messageId = await sendSlackMessage(slackMessage);
+  await db.createPR('New Translation', 'Translator', 'acs-schedule', prNumber, tags, new Date(), messageId);
+}
+
+
 
 async function processReadyToReviewLabelRemoved(repo, prNumber) {
   const pr = await db.getPR(repo, prNumber);
@@ -157,6 +166,9 @@ async function processPREvent(body) {
 
   if (action === 'labeled' && label?.name === 'Ready to review') {
     return await processReadyToReviewLabelAdded(title, repo, prNumber, creator, desc, extra);
+  }
+  if (action === 'labeled' && label?.name === 'ContinuousLocalization') {
+    return await processContinuousLocalizationLabelAdded(prNumber);
   }
 
   if (action === 'unlabeled' && label?.name === 'Ready to review') {
