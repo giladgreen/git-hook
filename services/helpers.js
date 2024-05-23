@@ -60,7 +60,7 @@ function getName(username){
 }
 
 function getTagName(username){
-    return `<@${userNameToId[username]}>` ;
+    return userNameToId[username] ? `<@${userNameToId[username]}>` : username;
 }
 
 function getTags(repo, creator){
