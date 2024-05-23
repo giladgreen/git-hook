@@ -30,7 +30,7 @@ const userNameToId = {
 }
 
 const serverDevelopers = ['greeng','tchizid','levin'];
-const clientDevelopers = ['greeng','maltzmb','erlicho','shermam1'];
+const clientDevelopers = ['greeng','erlicho','shermam1'];
 
 function getRepo(url){
     if (url.includes(EXTRATOR_REPO)){
