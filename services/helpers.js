@@ -15,7 +15,8 @@ const userNameToName = {
     levin: 'Nir Levi',
     nadivr: 'Raviv Nadiv',
     shermam1: 'Micha Sherman',
-    renovate: 'Renovate Bot'
+    renovate: 'Renovate Bot',
+    LocalizationsTeam: 'Localizations Team'
 }
 
 const userNameToId = {

@@ -56,9 +56,9 @@ async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, de
 
 
 async function processContinuousLocalizationLabelAdded(prNumber) {
-  const tags = getTags(CLIENT_REPO, 'Translator');
+  const tags = getTags(CLIENT_REPO, 'LocalizationsTeam');
   const prUrl = `https://git.autodesk.com/BIM360/acs-schedule/pull/${prNumber}`;
-  const slackMessage = getSlackMessageForNewPR(tags, 'Translator', prUrl, 'New Translation');
+  const slackMessage = getSlackMessageForNewPR(tags, 'LocalizationsTeam', prUrl, 'New Localizations');
   const messageId = await sendSlackMessage(slackMessage);
   await db.createPR('New Localizations', 'Localization Team', CLIENT_REPO, prNumber, tags, new Date(), messageId);
 }
@@ -123,10 +123,11 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
   const pr = await db.getPR(repo, prNumber);
   if (pr) {
     const creator = pr.creator;
-    const description = getDescription(prDesc);
+    const isLocalizationsTeam = creator === 'LocalizationsTeam'
+    const description = isLocalizationsTeam ? '' : getDescription(prDesc);
     const prCreator = getName(creator);
     const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
-    const slackMessageWithoutNewTags = getSlackMessageForNewPR('', prCreator, prUrl, pr.name, description, extra);
+    const slackMessageWithoutNewTags = getSlackMessageForNewPR('', prCreator, prUrl, pr.name, description, isLocalizationsTeam ? null : extra);
     const id = pr.id;
     const messageId = pr.slack_message_id;
     await updateSlackMessage(messageId, slackMessageWithoutNewTags);
