@@ -65,7 +65,7 @@ async function updatePrLastReminder(prId) {
   await query(
       `UPDATE prs SET last_reminder=? WHERE id = ?`,
       [
-        new Date(),
+          (new Date()).toISOString(),
         prId
       ]
   );
@@ -76,7 +76,7 @@ async function getOldPRs() {
 
   return await query(
       `SELECT id, tags, slack_message_id FROM prs WHERE last_reminder < ? AND is_deleted IS NULL`,
-      [time]
+      [time.toISOString()]
   );
 }
 
