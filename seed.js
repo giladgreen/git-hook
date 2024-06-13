@@ -37,6 +37,12 @@ V2tUjP6ce1TdYRuXUcZVTFztbfvSr7slOnstKa2bfw2TG3q0Tg==
 -----END CERTIFICATE-----`,
     },
 };
+const lazuz = {
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDcxOCwidHlwZSI6IlN1YnNjcmliZXIiLCJpYXQiOjE3MTgyOTMxMDAsImV4cCI6MTcxODI5NDEwMH0.ynB4zj4i5Ssvyk1SjmfZMOcIw9f_lnzcc-58fkpR5Pg",
+    refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDcxOCwidHlwZSI6IlN1YnNjcmliZXIiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzE4MjkzMTAwLCJleHAiOjIxNTAyOTMxMDB9.P4DUZsfCZMM_V_8WPk15dzRP5Nh-mhOOlnXuJjWNtVI"
+}
+
+
 
 const client = new pg.Client(config);
 client.connect(async function (err) {
@@ -45,7 +51,7 @@ client.connect(async function (err) {
 
 
     const createExtention = await client.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
-    console.log('createExtention', createExtention)
+    console.log('createExtention', createExtention.rows)
     // const dropTable = await client.query(`DROP TABLE prs`);
     // console.log('dropTable', dropTable)
 
@@ -64,6 +70,7 @@ client.connect(async function (err) {
         is_deleted BOOLEAN DEFAULT false,
         deleted_at timestamp);
     `)
+    console.log('createPrTable', createPrTable.rows)
 
 
     const createTokensTable = await client.query(`
@@ -73,8 +80,21 @@ client.connect(async function (err) {
         token_type TEXT);
     `)
 
-    console.log('####')
-    console.log('createPrTable', createPrTable)
-    console.log('createTokensTable', createTokensTable)
-    console.log('####')
+    console.log('createTokensTable', createTokensTable.rows)
+    const createTokens1 = await client.query(`
+      INSERT INTO tokens (token, token_type) VALUES ('${lazuz.refreshToken}','refreshToken')
+    `)
+
+    console.log('createTokens', createTokens1.rows)
+
+    const createTokens2 = await client.query(`
+      INSERT INTO tokens (token, token_type) VALUES ('${lazuz.token}','token')
+    `)
+
+    console.log('createTokens', createTokens2.rows)
+
+
 });
+
+
+
