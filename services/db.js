@@ -4,13 +4,19 @@ const { DAY, HOUR } = require("./helpers");
 const pg = require('pg');
 
 async function query(sql, params) {
-  console.log('## query', sql)
+  console.log('## sql', sql)
   console.log('## params', params)
-  // console.log('## config.db',config.db)
+    const parts = sql.split('?');
+  const query = parts.reduce((acc, part, i) => {
+    return acc + part + (params[i] ? `'${params[i]}'` : '');
+  } , '');
+    console.log('## query', query)
+
+    // console.log('## config.db',config.db)
   const client = new pg.Client(config.db);
   try{
       await client.connect();
-      const result = await client.query(sql, params);
+      const result = await client.query(query);
       console.log('## result', result);
 
       // const [results, ] = await connection.execute(sql, params);
