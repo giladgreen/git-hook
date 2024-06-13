@@ -4,8 +4,9 @@ const { DAY, HOUR } = require("./helpers");
 const pg = require('pg');
 
 async function query(sql, params) {
-  console.log('## query', sql, params)
-  console.log('## config.db',config.db)
+  console.log('## query', sql)
+  console.log('## params', params)
+  // console.log('## config.db',config.db)
   const client = new pg.Client(config.db);
   try{
       await client.connect();
@@ -13,7 +14,7 @@ async function query(sql, params) {
       console.log('## result', result);
 
       // const [results, ] = await connection.execute(sql, params);
-      return results;
+      return result;
   }catch(e){
       console.log('## ERROR', e.message);
       throw e;
