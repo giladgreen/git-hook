@@ -1,16 +1,26 @@
-const mysql = require('mysql2/promise');
+// const mysql = require('mysql2/promise');
 const config = require('../config');
 const { DAY, HOUR } = require("./helpers");
+const pg = require('pg');
 
 async function query(sql, params) {
   console.log('## query', sql, params)
   console.log('## config.db',config.db)
-  const connection = await mysql.createConnection(config.db);
-  const [results, ] = await connection.execute(sql, params);
+  const client = new pg.Client(config.db);
+  try{
+      await client.connect();
+      const result = await client.query(sql, params);
+      console.log('## result', result);
 
-  return results;
+      // const [results, ] = await connection.execute(sql, params);
+      return results;
+  }catch(e){
+      console.log('## ERROR', e.message);
+      throw e;
+  }
+  // const connection = await mysql.createConnection(config.db);
+
 }
-
 
 async function createPR(name, creator, repo, pr_number, tags,  last_reminder, messageId) {
   return await query(
