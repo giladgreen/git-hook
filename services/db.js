@@ -17,10 +17,10 @@ async function query(sql, params) {
   try{
       await client.connect();
       const result = await client.query(query);
-      console.log('## result', result);
+      console.log('## result', result.rows);
 
       // const [results, ] = await connection.execute(sql, params);
-      return result;
+      return result.rows;
   }catch(e){
       console.log('## ERROR', e.message);
       throw e;
