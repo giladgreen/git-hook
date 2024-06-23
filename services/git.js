@@ -153,6 +153,8 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
       await removeReactToSlackMessage(messageId, 'x');
       await db.markPRasDelete(id);
     }
+  }else{
+    console.log('## processPRReacted: PR not found:', repo, prNumber);
   }
 }
 
