@@ -16,6 +16,7 @@ async function query(sql, params) {
   const client = new pg.Client(config.db);
   try{
       await client.connect();
+      console.log('## query', query);
       const result = await client.query(query);
       console.log('## result', result.rows);
 
