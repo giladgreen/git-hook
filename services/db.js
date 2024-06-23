@@ -2,6 +2,23 @@
 const config = require('../config');
 const { DAY, HOUR } = require("./helpers");
 const pg = require('pg');
+let connection;
+let client;
+async function getDBConnection(){
+    if (client){
+        return client;
+    }
+
+    try {
+        const localClient = new pg.Client(config.db);
+        connection = await client.connect();
+        client = localClient
+        return client;
+    }catch(e){
+        console.log('## getDBConnection ERROR', e.message);
+        throw e;
+    }
+}
 
 async function query(sql, params) {
   console.log('## sql', sql)
@@ -12,10 +29,8 @@ async function query(sql, params) {
   } , '');
     console.log('## query', query)
 
-    // console.log('## config.db',config.db)
-  const client = new pg.Client(config.db);
   try{
-      await client.connect();
+      const client = await getDBConnection();
 
       const result = await client.query(query);
       console.log('## result', result.rows);
