@@ -11,7 +11,7 @@ async function getDBConnection(){
 
     try {
         const localClient = new pg.Client(config.db);
-        connection = await client.connect();
+        connection = await localClient.connect();
         client = localClient
         return client;
     }catch(e){
