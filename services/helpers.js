@@ -15,6 +15,7 @@ const userNameToName = {
     levin: 'Nir Levi',
     nadivr: 'Raviv Nadiv',
     shermam1: 'Micha Sherman',
+    hochmar: 'Rotem Hochman',
     renovate: 'Renovate Bot',
     LocalizationsTeam: 'Localizations Team'
 }
@@ -27,7 +28,8 @@ const userNameToId = {
     tchizid: 'U011A594ARZ',// 'Dor Tchizik',
     levin: 'U41CXMEAG',//'Nir Levi',
     shermam1: 'U06BZ11J8P7',//'Micha Sherman',
-    nadivr: 'U03FTQS4GM9'//'Raviv Nadiv',
+    nadivr: 'U03FTQS4GM9',//'Raviv Nadiv',
+    hochmar: 'U06J1STR33Q'//'Rotem Hochman',
 }
 
 const serverDevelopers = ['greeng','tchizid','levin'];
