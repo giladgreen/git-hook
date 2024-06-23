@@ -49,7 +49,7 @@ async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, de
   const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
   const slackMessage = getSlackMessageForNewPR(tags, prCreator, prUrl, title, description, extra);
   const messageId = await sendSlackMessage(slackMessage);
-  await db.createPR(title, creator, repo, prNumber, tags, new Date(), messageId);
+  await db.createPR(title, creator, repo, prNumber, tags, messageId);
 }
 
 
@@ -58,7 +58,7 @@ async function processContinuousLocalizationLabelAdded(prNumber) {
   const prUrl = `https://git.autodesk.com/BIM360/acs-schedule/pull/${prNumber}`;
   const slackMessage = getSlackMessageForNewPR(tags, 'LocalizationsTeam', prUrl, 'New Localizations');
   const messageId = await sendSlackMessage(slackMessage);
-  await db.createPR('New Localizations', 'Localization Team', CLIENT_REPO, prNumber, tags, new Date(), messageId);
+  await db.createPR('New Localizations', 'Localization Team', CLIENT_REPO, prNumber, tags, messageId);
 }
 
 
@@ -68,7 +68,7 @@ async function processRenovateLabelAdded(prNumber) {
   const prUrl = `https://git.autodesk.com/BIM360/acs-schedule/pull/${prNumber}`;
   const slackMessage = getSlackMessageForNewPR(tags, 'renovate', prUrl, 'New Renovate');
   const messageId = await sendSlackMessage(slackMessage);
-  await db.createPR('New Localizations', 'Localization Team', CLIENT_REPO, prNumber, tags, new Date(), messageId);
+  await db.createPR('New Localizations', 'Localization Team', CLIENT_REPO, prNumber, tags, messageId);
 }
 
 

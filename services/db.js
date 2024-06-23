@@ -30,7 +30,8 @@ async function query(sql, params) {
 
 }
 
-async function createPR(name, creator, repo, pr_number, tags,  last_reminder, messageId) {
+async function createPR(name, creator, repo, pr_number, tags,  messageId) {
+    const last_reminder = (new Date()).toISOString();
   return await query(
       `INSERT INTO prs
     (name, creator, repo, pr_number, tags, last_reminder, slack_message_id)
