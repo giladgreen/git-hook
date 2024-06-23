@@ -57,6 +57,7 @@ const removeReactToSlackMessage = async (messageId, reaction) => {
         });
     } catch (e) {
         console.error('# error trying to remove message reaction:', e.message, 'messageId:',messageId,'reaction', reaction);
+        console.error('# error: ', e.message);
         return e;
     }
 }
