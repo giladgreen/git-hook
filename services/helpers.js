@@ -9,6 +9,7 @@ const BOT_ID = 'U03JV4K3M';
 const userNameToName = {
     greeng: 'Gilad Green',
     maltzmb: 'Bar Maltzman',
+    zlatinj: 'Jonathan Zlatin',
     zlufl: 'Liron Zluf',
     erlicho: 'Odiya Erlichster',
     tchizid: 'Dor Tchizik',
@@ -29,7 +30,8 @@ const userNameToId = {
     levin: 'U41CXMEAG',//'Nir Levi',
     shermam1: 'U06BZ11J8P7',//'Micha Sherman',
     nadivr: 'U03FTQS4GM9',//'Raviv Nadiv',
-    hochmar: 'U06J1STR33Q'//'Rotem Hochman',
+    hochmar: 'U06J1STR33Q',//'Rotem Hochman',
+    zlatinj: 'U075J4Z3K4H'//'Jonathan Zlatin',
 }
 
 const serverDevelopers = ['greeng','tchizid','levin'];
