@@ -1,5 +1,6 @@
 const SERVER_REPO = 'schedule-service';
 const CLIENT_REPO = 'acs-schedule';
+const CLIENT2_REPO = 'acc-schedule-web-lib';
 const PLAN_REPO = 'plan-classic-web';
 const EXTRATOR_REPO = 'schedule-extractor';
 const HOUR = (60 * 60 * 1000);
@@ -8,14 +9,12 @@ const BOT_ID = 'U03JV4K3M';
 
 const userNameToName = {
     greeng: 'Gilad Green',
-    maltzmb: 'Bar Maltzman',
     zlatinj: 'Jonathan Zlatin',
-    zlufl: 'Liron Zluf',
     erlicho: 'Odiya Erlichster',
     tchizid: 'Dor Tchizik',
     levin: 'Nir Levi',
-    nadivr: 'Raviv Nadiv',
     shermam1: 'Micha Sherman',
+    nadivr: 'Raviv Nadiv',
     hochmar: 'Rotem Hochman',
     renovate: 'Renovate Bot',
     LocalizationsTeam: 'Localizations Team'
@@ -23,19 +22,17 @@ const userNameToName = {
 
 const userNameToId = {
     greeng: 'U93GVQANN',// 'Gilad Green',
-    maltzmb: 'U04QT8537HA',//'Bar Maltzman',
-    zlufl: 'UA33JGJLA',//'Liron Zluf',
     erlicho: 'U0275G55QQ0',//'Odiya Erlichster',
     tchizid: 'U011A594ARZ',// 'Dor Tchizik',
     levin: 'U41CXMEAG',//'Nir Levi',
     shermam1: 'U06BZ11J8P7',//'Micha Sherman',
+    zlatinj: 'U075J4Z3K4H',//'Jonathan Zlatin',
     nadivr: 'U03FTQS4GM9',//'Raviv Nadiv',
     hochmar: 'U06J1STR33Q',//'Rotem Hochman',
-    zlatinj: 'U075J4Z3K4H'//'Jonathan Zlatin',
 }
 
 const serverDevelopers = ['greeng','tchizid','levin'];
-const clientDevelopers = ['greeng','erlicho','shermam1'];
+const clientDevelopers = ['greeng','erlicho','shermam1','zlatinj'];
 
 function getRepo(url){
     if (url.includes(EXTRATOR_REPO)){
@@ -43,6 +40,9 @@ function getRepo(url){
     }
     if (url.includes(CLIENT_REPO)){
         return CLIENT_REPO;
+    }
+    if (url.includes(CLIENT2_REPO)){
+        return CLIENT2_REPO;
     }
     if (url.includes(SERVER_REPO)){
         return SERVER_REPO;
@@ -72,7 +72,7 @@ function getTags(repo, creator){
     if (repo === SERVER_REPO || repo === PLAN_REPO || repo === EXTRATOR_REPO){
         return serverDevelopers.filter(item => item !== creator).map(item => getTagName(item)).join(', ');
     }
-    if (repo === CLIENT_REPO){
+    if (repo === CLIENT_REPO || repo === CLIENT2_REPO){
         return clientDevelopers.filter(item => item !== creator).map(item => getTagName(item)).join(', ');
     }
     return '<@acs-schedule-fullstack-eng>';
@@ -137,9 +137,9 @@ module.exports = {
     getTags,
     getTagName,
     getDescription,
-    hasCustomDescription,
     getSlackMessageForNewPR,
     HOUR,
     DAY,
-    CLIENT_REPO
+    CLIENT_REPO,
+    CLIENT2_REPO
 }
