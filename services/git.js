@@ -160,9 +160,13 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
 
 async function processPREvent(body) {
   console.log('####### processPREvent')
-  console.log('####### body:', body)
+
   const { action, label, review, pull_request } = JSON.parse(body?.payload);
-  const url = pull_request?.html_url;
+  console.log('####### action',action)
+  console.log('####### label',label)
+  console.log('####### review',review)
+  console.log('####### pull_request',pull_request)
+  const url = pull_request?.html_url ?? ' ';
   const repo = getRepo(url);
   const prNumber = getPRNumber(url);
   const creator = pull_request?.user?.login;
