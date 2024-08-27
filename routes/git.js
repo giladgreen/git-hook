@@ -4,7 +4,7 @@ const git = require('../services/git');
 
 router.post('/', async function(req, res, next) {
   try {
-    console.log(`got req.body ${ typeof req.body === string ? `string of length: ${req.body.length}` : 'not a string'}`);
+    console.log(`got req.body ${ typeof req.body === 'string' ? `string of length: ${req.body.length}` : 'not a string'}`);
 
     res.json(await git.processPREvent(req.body));
   } catch (err) {
