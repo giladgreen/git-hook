@@ -161,11 +161,11 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
 async function processPREvent(body) {
   console.log('####### processPREvent')
   if (!body) {
-    return 'no body';
+    console.log('####### no body')
   }
   const payload = body?.payload;
   if (!payload) {
-    return 'no payload';
+    console.log('####### no payload', body)
   } else{
     console.log('####### typeof payload',  typeof payload)
     console.log('####### typeof payload = string?',  typeof payload === 'string' )
