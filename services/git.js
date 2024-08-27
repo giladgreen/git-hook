@@ -166,17 +166,6 @@ async function processPREvent(body) {
   const payload = body?.payload;
   if (!payload) {
     console.log('####### no payload', body)
-  } else{
-    console.log('####### typeof payload',  typeof payload)
-    console.log('####### typeof payload = string?',  typeof payload === 'string' )
-    if (typeof payload === 'string'){
-      console.log('####### string payload length',  payload.length)
-      if (payload.length < 300){
-        console.log('####### string payload:',  payload)
-      } else{
-        console.log('####### string trimmed payload:',  payload.slice(0,290))
-      }
-    }
   }
   const { action, label, review, pull_request } = typeof payload === 'string' ? JSON.parse(payload) : payload;
   console.log('####### action',action)
