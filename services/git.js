@@ -160,6 +160,7 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
 
 async function processPREvent(body) {
   console.log('####### processPREvent')
+  console.log('####### body:', body)
   const { action, label, review, pull_request } = JSON.parse(body?.payload);
   const url = pull_request?.html_url;
   const repo = getRepo(url);
