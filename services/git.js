@@ -160,8 +160,25 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
 
 async function processPREvent(body) {
   console.log('####### processPREvent')
-
-  const { action, label, review, pull_request } = JSON.parse(body?.payload);
+  if (!body) {
+    return 'no body';
+  }
+  const payload = body?.payload;
+  if (!payload) {
+    return 'no payload';
+  } else{
+    console.log('####### typeof payload',  typeof payload)
+    console.log('####### typeof payload = string?',  typeof payload === 'string' )
+    if (typeof payload === 'string'){
+      console.log('####### string payload length',  payload.length)
+      if (payload.length < 300){
+        console.log('####### string payload:',  payload)
+      } else{
+        console.log('####### string trimmed payload:',  payload.slice(0,290))
+      }
+    }
+  }
+  const { action, label, review, pull_request } = typeof payload === 'string' ? JSON.parse(payload) : payload;
   console.log('####### action',action)
   console.log('####### label',label)
   console.log('####### review',review)
