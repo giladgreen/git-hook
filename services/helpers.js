@@ -11,7 +11,6 @@ const userNameToName = {
     greeng: 'Gilad Green',
     zlatinj: 'Jonathan Zlatin',
     erlicho: 'Odiya Erlichster',
-    tchizid: 'Dor Tchizik',
     levin: 'Nir Levi',
     shermam1: 'Micha Sherman',
     nadivr: 'Raviv Nadiv',
@@ -23,7 +22,6 @@ const userNameToName = {
 const userNameToId = {
     greeng: 'U93GVQANN',// 'Gilad Green',
     erlicho: 'U0275G55QQ0',//'Odiya Erlichster',
-    tchizid: 'U011A594ARZ',// 'Dor Tchizik',
     levin: 'U41CXMEAG',//'Nir Levi',
     shermam1: 'U06BZ11J8P7',//'Micha Sherman',
     zlatinj: 'U075J4Z3K4H',//'Jonathan Zlatin',
@@ -31,7 +29,7 @@ const userNameToId = {
     hochmar: 'U06J1STR33Q',//'Rotem Hochman',
 }
 
-const serverDevelopers = ['greeng','tchizid','levin'];
+const serverDevelopers = ['greeng','levin'];
 const clientDevelopers = ['greeng','erlicho','shermam1','zlatinj'];
 
 function getRepo(url){
