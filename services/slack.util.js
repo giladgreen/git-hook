@@ -1,6 +1,8 @@
 const { WebClient } = require('@slack/web-api');
 const PR_CHANNEL = 'C0679N7LHBP';
 const NOTIFICATION_CHANNEL = 'C06SE2Z5GUE'; // (temp-bot-test)
+const BE_CHANNEL = 'C07LW4DGW3F';
+const FE_CHANNEL = 'C07M1D6AKGC';
 const options = {};
 const web = new WebClient(process.env.SLACK_TOKEN, options);
 
@@ -83,8 +85,8 @@ const sendSlackMessageNow = async (message, channel) => {
     // console.log('## sendSlackMessageNow resp', resp)
     return resp.ts;
 }
-const sendSlackMessage = async (message) => {
-    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+const sendSlackMessage = async (message, isServerChannel) => {
+    const channel = isServerChannel ? BE_CHANNEL : FE_CHANNEL;
 
     try {
         const messageId = await sendSlackMessageNow(message, channel);
@@ -97,8 +99,8 @@ const sendSlackMessage = async (message) => {
     }
 };
 
-const sendSlackNotification = async (message) => {
-    const channel = NOTIFICATION_CHANNEL;
+const sendSlackNotification = async (isServerChannel, message) => {
+    const channel = isServerChannel ? BE_CHANNEL : FE_CHANNEL;
 
     try {
         const messageId = await sendSlackMessageNow(message, channel);
