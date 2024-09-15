@@ -139,5 +139,6 @@ module.exports = {
     HOUR,
     DAY,
     CLIENT_REPO,
+    SERVER_REPO,
     CLIENT2_REPO
 }
