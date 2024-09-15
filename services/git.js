@@ -81,7 +81,7 @@ async function processReadyToReviewLabelRemoved(repo, prNumber) {
   if (pr) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
-    await deleteSlackMessage(messageId);
+    await deleteSlackMessage(messageId, repo === SERVER_REPO);
     await db.deletePR(id);
   }
 }

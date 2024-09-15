@@ -64,8 +64,8 @@ const removeReactToSlackMessage = async (messageId, reaction) => {
         return e;
     }
 }
-const deleteSlackMessage = async (messageId) => {
-    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+const deleteSlackMessage = async (messageId, isServer) => {
+    const channel = isServer ? BE_CHANNEL : FE_CHANNEL;
 
     try {
         await web.chat.delete({
