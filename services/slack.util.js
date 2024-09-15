@@ -7,8 +7,8 @@ const FE_CHANNEL = 'C07M1D6AKGC';
 const options = {};
 const web = new WebClient(process.env.SLACK_TOKEN, options);
 
-const updateSlackMessage = async (messageId, message) => {
-    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+const updateSlackMessage = async (messageId, message, isServer) => {
+    const channel = isServer ? BE_CHANNEL : FE_CHANNEL;
     try {
         await web.chat.update({
             channel,
@@ -21,8 +21,8 @@ const updateSlackMessage = async (messageId, message) => {
         return e;
     }
 }
-const replayToSlackMessage = async (messageId, message) => {
-    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+const replayToSlackMessage = async (messageId, message, isServer) => {
+    const channel = isServer ? BE_CHANNEL : FE_CHANNEL;
     try {
         await web.chat.postMessage({
             channel,
@@ -35,8 +35,8 @@ const replayToSlackMessage = async (messageId, message) => {
         return e;
     }
 }
-const reactToSlackMessage = async (messageId, reaction) => {
-    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+const reactToSlackMessage = async (messageId, reaction, isServer) => {
+    const channel = isServer ? BE_CHANNEL : FE_CHANNEL;
     try {
         await web.reactions.add({
             channel,
@@ -49,8 +49,8 @@ const reactToSlackMessage = async (messageId, reaction) => {
         return e;
     }
 }
-const removeReactToSlackMessage = async (messageId, reaction) => {
-    const channel = process.env.SLACK_CHANNEL_ID || PR_CHANNEL;
+const removeReactToSlackMessage = async (messageId, reaction, isServer) => {
+    const channel = isServer ? BE_CHANNEL : FE_CHANNEL;
     try {
         await web.reactions.remove({
             channel,

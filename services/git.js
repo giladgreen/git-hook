@@ -26,9 +26,9 @@ async function startNegging(repo, prNumber) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
     const slackMessage = 'This PR is still waiting for a review..';
-    replayToSlackMessage(messageId, slackMessage);
+    replayToSlackMessage(messageId, slackMessage, repo === SERVER_REPO);
     neggingHandlers[id] = setInterval(() => {
-      replayToSlackMessage(messageId, slackMessage);
+      replayToSlackMessage(messageId, slackMessage, repo === SERVER_REPO);
     }, 15 * 60 * 1000);
   }
 }
@@ -92,14 +92,14 @@ async function processPRClosed(repo, prNumber) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
     if (pr.is_deleted) {
-      await replayToSlackMessage(messageId, 'PR Merged.');
-      await reactToSlackMessage(messageId, 'white_check_mark');
+      await replayToSlackMessage(messageId, 'PR Merged.', repo === SERVER_REPO);
+      await reactToSlackMessage(messageId, 'white_check_mark', repo === SERVER_REPO);
       setTimeout(() => {
-        replayToSlackMessage(messageId, 'It is now (probably) in QA.');
-        reactToSlackMessage(messageId, 'done-stamp');
+        replayToSlackMessage(messageId, 'It is now (probably) in QA.', repo === SERVER_REPO);
+        reactToSlackMessage(messageId, 'done-stamp', repo === SERVER_REPO);
       }, HOUR);
     } else{
-      await replayToSlackMessage(messageId, 'PR Closed.');
+      await replayToSlackMessage(messageId, 'PR Closed.', repo === SERVER_REPO);
     }
 
     await db.deletePR(id);
@@ -141,19 +141,19 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
     const slackMessageWithoutNewTags = getSlackMessageForNewPR('', prCreator, prUrl, pr.name, description, isLocalizationsTeam ? null : extra);
     const id = pr.id;
     const messageId = pr.slack_message_id;
-    await updateSlackMessage(messageId, slackMessageWithoutNewTags);
+    await updateSlackMessage(messageId, slackMessageWithoutNewTags, repo === SERVER_REPO);
     if (reactionType !== 'commented' || creator !== reactedUser){
       // dont add eyes emoji because of a comment added by PR creator
-      await reactToSlackMessage(messageId, reactions[reactionType]);
+      await reactToSlackMessage(messageId, reactions[reactionType], repo === SERVER_REPO);
     }
 
     const message = getReactionMessage(creator, reactedUser, reactionType);
-    await replayToSlackMessage(messageId, message);
+    await replayToSlackMessage(messageId, message, repo === SERVER_REPO);
     if (reactionBody && reactionBody.length > 0){
-      await replayToSlackMessage(messageId,`*${getName(reactedUser)}:* ${reactionBody}`);
+      await replayToSlackMessage(messageId,`*${getName(reactedUser)}:* ${reactionBody}`, repo === SERVER_REPO);
     }
     if (reactionType === 'approved') {
-      await removeReactToSlackMessage(messageId, 'x');
+      await removeReactToSlackMessage(messageId, 'x', repo === SERVER_REPO);
       await db.markPRasDelete(id);
     }
   }else{
