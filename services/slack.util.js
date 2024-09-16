@@ -1,8 +1,8 @@
 const { WebClient } = require('@slack/web-api');
 const PR_CHANNEL = 'C0679N7LHBP';
 const NOTIFICATION_CHANNEL = 'C06SE2Z5GUE'; // (temp-bot-test)
-const BE_CHANNEL = 'C07LW4DGW3F';
-const FE_CHANNEL = 'C07M1D6AKGC';
+const BE_CHANNEL = 'C015A8NQ554';//'C07LW4DGW3F';
+const FE_CHANNEL = 'C014K4FT38V';//'C07M1D6AKGC';
 //C07M1D6AKGC
 const options = {};
 const web = new WebClient(process.env.SLACK_TOKEN, options);
