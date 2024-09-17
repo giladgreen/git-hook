@@ -8,6 +8,10 @@ const options = {};
 const web = new WebClient(process.env.SLACK_TOKEN, options);
 
 const updateSlackMessage = async (messageId, message, isServer) => {
+    if (!messageId) {
+        console.error('# error trying to update message: messageId is missing');
+        return;
+    }
     const channel = isServer ? BE_CHANNEL : FE_CHANNEL;
     try {
         await web.chat.update({
@@ -22,6 +26,10 @@ const updateSlackMessage = async (messageId, message, isServer) => {
     }
 }
 const replayToSlackMessage = async (messageId, message, isServer) => {
+    if (!messageId) {
+        console.error('# error trying to replay message: messageId is missing');
+        return;
+    }
     const channel = isServer ? BE_CHANNEL : FE_CHANNEL;
     try {
         await web.chat.postMessage({
@@ -36,6 +44,10 @@ const replayToSlackMessage = async (messageId, message, isServer) => {
     }
 }
 const reactToSlackMessage = async (messageId, reaction, isServer) => {
+    if (!messageId) {
+        console.error('# error trying to react message: messageId is missing');
+        return;
+    }
     const channel = isServer ? BE_CHANNEL : FE_CHANNEL;
     try {
         await web.reactions.add({
@@ -50,6 +62,10 @@ const reactToSlackMessage = async (messageId, reaction, isServer) => {
     }
 }
 const removeReactToSlackMessage = async (messageId, reaction, isServer) => {
+    if (!messageId) {
+        console.error('# error trying to remove reaction message: messageId is missing');
+        return;
+    }
     const channel = isServer ? BE_CHANNEL : FE_CHANNEL;
     try {
         await web.reactions.remove({
@@ -65,6 +81,10 @@ const removeReactToSlackMessage = async (messageId, reaction, isServer) => {
     }
 }
 const deleteSlackMessage = async (messageId, isServer) => {
+    if (!messageId) {
+        console.error('# error trying to delete message: messageId is missing');
+        return;
+    }
     const channel = isServer ? BE_CHANNEL : FE_CHANNEL;
 
     try {

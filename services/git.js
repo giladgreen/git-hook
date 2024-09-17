@@ -26,11 +26,14 @@ async function startNegging(repo, prNumber) {
   if (pr) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
-    const slackMessage = 'This PR is still waiting for a review..';
-    replayToSlackMessage(messageId, slackMessage, isServer(repo));
-    neggingHandlers[id] = setInterval(() => {
+    if (messageId){
+      const slackMessage = 'This PR is still waiting for a review..';
       replayToSlackMessage(messageId, slackMessage, isServer(repo));
-    }, 15 * 60 * 1000);
+      neggingHandlers[id] = setInterval(() => {
+        replayToSlackMessage(messageId, slackMessage, isServer(repo));
+      }, 15 * 60 * 1000);
+    }
+
   }
 }
 async function stopNegging(repo, prNumber) {
@@ -89,15 +92,17 @@ async function processPRClosed(repo, prNumber) {
   if (pr) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
-    if (pr.is_deleted) {
-      await replayToSlackMessage(messageId, 'PR Merged.', isServer(repo));
-      await reactToSlackMessage(messageId, 'white_check_mark', isServer(repo));
-      setTimeout(() => {
-        replayToSlackMessage(messageId, 'It is now (probably) in QA.', isServer(repo));
-        reactToSlackMessage(messageId, 'done-stamp', isServer(repo));
-      }, HOUR);
-    } else{
-      await replayToSlackMessage(messageId, 'PR Closed.', isServer(repo));
+    if (messageId){
+      if (pr.is_deleted) {
+        await replayToSlackMessage(messageId, 'PR Merged.', isServer(repo));
+        await reactToSlackMessage(messageId, 'white_check_mark', isServer(repo));
+        setTimeout(() => {
+          replayToSlackMessage(messageId, 'It is now (probably) in QA.', isServer(repo));
+          reactToSlackMessage(messageId, 'done-stamp', isServer(repo));
+        }, HOUR);
+      } else{
+        await replayToSlackMessage(messageId, 'PR Closed.', isServer(repo));
+      }
     }
 
     await db.deletePR(id);
