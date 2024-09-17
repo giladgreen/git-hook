@@ -66,8 +66,12 @@ function getTagName(username){
     return userNameToId[username] ? `<@${userNameToId[username]}>` : username;
 }
 
+function isServer(repo){
+    return (repo === SERVER_REPO || repo === PLAN_REPO || repo === EXTRATOR_REPO);
+}
+
 function getTags(repo, creator){
-    if (repo === SERVER_REPO || repo === PLAN_REPO || repo === EXTRATOR_REPO){
+    if (isServer(repo)){
         return serverDevelopers.filter(item => item !== creator).map(item => getTagName(item)).join(', ');
     }
     if (repo === CLIENT_REPO || repo === CLIENT2_REPO){
@@ -128,6 +132,7 @@ function isOffTime(){
     return false;
 }
 module.exports = {
+    isServer,
     isOffTime,
     getName,
     getRepo,

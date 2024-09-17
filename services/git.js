@@ -1,5 +1,6 @@
 const db = require('./db');
 const {
+  isServer,
   isOffTime,
   getName,
   getTags,
@@ -26,9 +27,9 @@ async function startNegging(repo, prNumber) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
     const slackMessage = 'This PR is still waiting for a review..';
-    replayToSlackMessage(messageId, slackMessage, repo === SERVER_REPO);
+    replayToSlackMessage(messageId, slackMessage, isServer(repo));
     neggingHandlers[id] = setInterval(() => {
-      replayToSlackMessage(messageId, slackMessage, repo === SERVER_REPO);
+      replayToSlackMessage(messageId, slackMessage, isServer(repo));
     }, 15 * 60 * 1000);
   }
 }
@@ -48,10 +49,7 @@ async function processReadyToReviewLabelAdded(title, repo, prNumber, creator, de
   const prCreator = getName(creator);
   const prUrl = `https://git.autodesk.com/BIM360/${repo}/pull/${prNumber}`;
   const slackMessage = getSlackMessageForNewPR(tags, prCreator, prUrl, title, description, extra);
-  console.log('## SERVER_REPO:', SERVER_REPO);
-  console.log('## repo:', repo);
-  console.log('## repo === SERVER_REPO:', repo === SERVER_REPO);
-  const messageId = await sendSlackMessage(slackMessage, repo === SERVER_REPO);
+  const messageId = await sendSlackMessage(slackMessage, isServer(repo));
   await db.createPR(title, creator, repo, prNumber, tags, messageId);
 }
 
@@ -81,7 +79,7 @@ async function processReadyToReviewLabelRemoved(repo, prNumber) {
   if (pr) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
-    await deleteSlackMessage(messageId, repo === SERVER_REPO);
+    await deleteSlackMessage(messageId, isServer(repo));
     await db.deletePR(id);
   }
 }
@@ -92,14 +90,14 @@ async function processPRClosed(repo, prNumber) {
     const id = pr.id;
     const messageId = pr.slack_message_id;
     if (pr.is_deleted) {
-      await replayToSlackMessage(messageId, 'PR Merged.', repo === SERVER_REPO);
-      await reactToSlackMessage(messageId, 'white_check_mark', repo === SERVER_REPO);
+      await replayToSlackMessage(messageId, 'PR Merged.', isServer(repo));
+      await reactToSlackMessage(messageId, 'white_check_mark', isServer(repo));
       setTimeout(() => {
-        replayToSlackMessage(messageId, 'It is now (probably) in QA.', repo === SERVER_REPO);
-        reactToSlackMessage(messageId, 'done-stamp', repo === SERVER_REPO);
+        replayToSlackMessage(messageId, 'It is now (probably) in QA.', isServer(repo));
+        reactToSlackMessage(messageId, 'done-stamp', isServer(repo));
       }, HOUR);
     } else{
-      await replayToSlackMessage(messageId, 'PR Closed.', repo === SERVER_REPO);
+      await replayToSlackMessage(messageId, 'PR Closed.', isServer(repo));
     }
 
     await db.deletePR(id);
@@ -141,19 +139,19 @@ async function processPRReacted(repo, prNumber, reactedUser, reactionBody, prDes
     const slackMessageWithoutNewTags = getSlackMessageForNewPR('', prCreator, prUrl, pr.name, description, isLocalizationsTeam ? null : extra);
     const id = pr.id;
     const messageId = pr.slack_message_id;
-    await updateSlackMessage(messageId, slackMessageWithoutNewTags, repo === SERVER_REPO);
+    await updateSlackMessage(messageId, slackMessageWithoutNewTags, isServer(repo));
     if (reactionType !== 'commented' || creator !== reactedUser){
       // dont add eyes emoji because of a comment added by PR creator
-      await reactToSlackMessage(messageId, reactions[reactionType], repo === SERVER_REPO);
+      await reactToSlackMessage(messageId, reactions[reactionType], isServer(repo));
     }
 
     const message = getReactionMessage(creator, reactedUser, reactionType);
-    await replayToSlackMessage(messageId, message, repo === SERVER_REPO);
+    await replayToSlackMessage(messageId, message, isServer(repo));
     if (reactionBody && reactionBody.length > 0){
-      await replayToSlackMessage(messageId,`*${getName(reactedUser)}:* ${reactionBody}`, repo === SERVER_REPO);
+      await replayToSlackMessage(messageId,`*${getName(reactedUser)}:* ${reactionBody}`, isServer(repo));
     }
     if (reactionType === 'approved') {
-      await removeReactToSlackMessage(messageId, 'x', repo === SERVER_REPO);
+      await removeReactToSlackMessage(messageId, 'x', isServer(repo));
       await db.markPRasDelete(id);
     }
   }else{
