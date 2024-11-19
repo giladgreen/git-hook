@@ -149,6 +149,7 @@ function getHtmlResultsSection(localHost, results) {
 }
 
 function getMonthReservationsSection(monthReservationsObject) {
+    console.log('## monthReservationsObject', monthReservationsObject)
    return `
     <h1><u>${translations.reservations} ${translations[monthReservationsObject.name.toLowerCase()]}  (${monthReservationsObject.reservations.length}): ${monthReservationsObject.totalCost} ${translations.shekels}</u></h1>
 
@@ -178,6 +179,7 @@ function getPastReservationsSection(reservations) {
 
     const reservationsByMonth = reservations.reduce((acc, curr) => {
         const month = curr.start_date.substring(6,7) ?? new Date(curr.start_date).toLocaleString("en-US", { month: "long" })
+        console.log('### curr.start_date:',curr.start_date, 'month:', month)
 
         if (!acc[month]){
             acc[month] = [];
