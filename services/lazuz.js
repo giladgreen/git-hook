@@ -40,8 +40,8 @@ const options = {
     }
 }
 
-const PREFERRED_HOURS = ["19:00:00", "20:00:00"];
-const ALL_HOURS = ["19:00:00", "20:00:00", "21:00:00"];
+const PREFERRED_HOURS = ["19:00:00", "20:00:00", "19:30:00", "20:30:00"];
+const ALL_HOURS = ["18:00:00","19:00:00", "20:00:00", "21:00:00", "18:30:00","19:30:00", "20:30:00", "21:30:00"];
 
 async function sendSms(body) {
     if (!body.phone || !body.name){
