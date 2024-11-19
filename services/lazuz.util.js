@@ -178,7 +178,7 @@ function getPastReservationsSection(reservations) {
     }
 
     const reservationsByMonth = reservations.reduce((acc, curr) => {
-        const month = curr.start_date.substring(6,7) ?? new Date(curr.start_date).toLocaleString("en-US", { month: "long" })
+        const month = `${Number(curr.start_date.substring(5,7))}`
         console.log('### curr.start_date:',curr.start_date, 'month:', month)
 
         if (!acc[month]){
