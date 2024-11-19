@@ -121,7 +121,7 @@ async function getUserReservations(){
                 'User-Agent': 'Node/12.14.1'
             }
         });
-        console.log('## reservationsResponse.data:', reservationsResponse.data);
+        //console.log('## reservationsResponse.data:', reservationsResponse.data);
 
         return reservationsResponse.data.results || [];
     } catch(e){
@@ -159,10 +159,12 @@ async function getSingleDateSearchResults(date) {
 async function getSearchResults(dates,include) {
     const results = [];
     const allData = await Promise.all(dates.map(date => getSingleDateSearchResults(date)));
+    console.log('### clubs Searc hResults:');
     for (let i=0; i< allData.length; i++){
         const { date, clubs } = allData[i];
         results[date] = [];
         clubs.forEach(club => {
+            console.log('### club data:', club);
             if (!club?.availableSlots || !Array.isArray(club.availableSlots)){
                 return;
             }
@@ -175,6 +177,7 @@ async function getSearchResults(dates,include) {
         })
 
     }
+    console.log('###########');
     return results;
 }
 async function actualReservationCall(requestBody) {
@@ -194,7 +197,7 @@ async function actualReservationCall(requestBody) {
                     'X-Requested-With': 'com.lazuz.clientapp'
                 }
             });
-            console.log('## booked with price:',price)
+            //console.log('## booked with price:',price)
             return;
         } catch (e) {
             console.log('## failed to book with price:',price)

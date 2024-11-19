@@ -149,7 +149,7 @@ function getHtmlResultsSection(localHost, results) {
 }
 
 function getMonthReservationsSection(monthReservationsObject) {
-    console.log('## monthReservationsObject', monthReservationsObject)
+    //console.log('## monthReservationsObject', monthReservationsObject)
    return `
     <h1><u>${translations.reservations} ${translations[monthReservationsObject.name.toLowerCase()]}  (${monthReservationsObject.reservations.length}): ${monthReservationsObject.totalCost} ${translations.shekels}</u></h1>
 
@@ -179,7 +179,7 @@ function getPastReservationsSection(reservations) {
 
     const reservationsByMonth = reservations.reduce((acc, curr) => {
         const month = `${Number(curr.start_date.substring(5,7))}`
-        console.log('### curr.start_date:',curr.start_date, 'month:', month)
+        //console.log('### curr.start_date:',curr.start_date, 'month:', month)
 
         if (!acc[month]){
             acc[month] = [];
@@ -244,10 +244,7 @@ function wrapWithHtml(localHost, reservations, results, include){
 
     const pastReservations = reservations.filter(reservation => getReservationExactTime(reservation) < nowInIsrael);
     const futureReservations = reservations.filter(reservation => getReservationExactTime(reservation) >= nowInIsrael);
-    console.log('## localHost', localHost)
-    console.log('## reservations', reservations)
-    console.log('## results', results)
-    console.log('## include', include)
+
 
     return `<!DOCTYPE html>
 <html lang="en">

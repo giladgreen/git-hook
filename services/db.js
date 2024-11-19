@@ -21,19 +21,19 @@ async function getDBConnection(){
 }
 
 async function query(sql, params) {
-  console.log('## sql', sql)
-  console.log('## params', params)
+ // console.log('## sql', sql)
+ // console.log('## params', params)
     const parts = sql.split('?');
   const query = parts.reduce((acc, part, i) => {
     return acc + part + (params[i] ? `'${params[i]}'` : '');
   } , '');
-    console.log('## query', query)
+    //console.log('## query', query)
 
   try{
       const client = await getDBConnection();
-      console.log('## client', !!client);
+      //console.log('## client', !!client);
       const result = await client.query(query);
-      console.log('## result', result.rows);
+    //  console.log('## result', result.rows);
 
       // const [results, ] = await connection.execute(sql, params);
       return result.rows;
