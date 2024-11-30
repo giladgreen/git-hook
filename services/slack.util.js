@@ -109,21 +109,9 @@ const sendSlackMessageNow = async (message, channel) => {
 }
 const sendSlackMessage = async (message, isServerChannel) => {
     const channel = isServerChannel ? BE_CHANNEL : FE_CHANNEL;
-    const offTime = isOffTime();
-    if (offTime){
-        try {
-            await sendSlackMessageNow('ignoring during off time..', channel);
-        } catch (e) {
-            console.error('# error trying to send offline message:', e.message);
-        }
-        throw new Error('offline time');
-    }
-
     try {
         const messageId = await sendSlackMessageNow(message, channel);
-
         return messageId;
-
     } catch (e) {
         console.error('# error trying to send message:', e.message);
         return e;
