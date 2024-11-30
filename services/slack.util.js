@@ -1,4 +1,5 @@
 const { WebClient } = require('@slack/web-api');
+const {isOffTime} = require("./helpers");
 const PR_CHANNEL = 'C0679N7LHBP';
 const NOTIFICATION_CHANNEL = 'C06SE2Z5GUE'; // (temp-bot-test)
 const BE_CHANNEL = 'C015A8NQ554';//'C07LW4DGW3F';
@@ -108,6 +109,15 @@ const sendSlackMessageNow = async (message, channel) => {
 }
 const sendSlackMessage = async (message, isServerChannel) => {
     const channel = isServerChannel ? BE_CHANNEL : FE_CHANNEL;
+    const offTime = isOffTime();
+    if (offTime){
+        try {
+            await sendSlackMessageNow('ignoring during off time..', channel);
+        } catch (e) {
+            console.error('# error trying to send offline message:', e.message);
+        }
+        throw new Error('offline time');
+    }
 
     try {
         const messageId = await sendSlackMessageNow(message, channel);
