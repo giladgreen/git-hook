@@ -120,16 +120,17 @@ ${description ? description : ''}
 function isOffTime(){
     const now = new Date();
     const currentDay = now.getDay();
-    const currentTime = Number(now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }).substring(0,2));
-    console.log('## isOffTime,  time:', currentTime);
-
+    const currentTime = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+    console.log('## isOffTime,  currentTime:', currentTime);
+   const currentHour = Number(currentTime.substring(0,2)) + 2;
+    console.log('## isOffTime,  currentHour:', currentHour);
     if (currentDay >= 5) {
         console.log('## isOffTime: true - weekend.');
         return true;
     }
 
 
-    if (currentTime < 8 || currentTime > 18) {
+    if (currentHour < 8 || currentHour > 18) {
         console.log('## isOffTime: true - non working hours.');
 
         return true;
