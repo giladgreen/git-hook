@@ -8,6 +8,7 @@ const DAY = 24 * HOUR;
 const BOT_ID = 'U03JV4K3M';
 
 const userNameToName = {
+    horojam: 'Michael Horojanski',
     greeng: 'Gilad Green',
     zlatinj: 'Jonathan Zlatin',
     erlicho: 'Odiya Erlichster',
@@ -20,6 +21,7 @@ const userNameToName = {
 }
 
 const userNameToId = {
+    horojam: 'U080A6ZN4TW',// 'Michael Horojanski',
     greeng: 'U93GVQANN',// 'Gilad Green',
     erlicho: 'U0275G55QQ0',//'Odiya Erlichster',
     levin: 'U41CXMEAG',//'Nir Levi',
@@ -29,7 +31,7 @@ const userNameToId = {
     hochmar: 'U06J1STR33Q',//'Rotem Hochman',
 }
 
-const serverDevelopers = ['greeng','levin'];
+const serverDevelopers = ['greeng','levin','horojam','erlicho' ];
 const clientDevelopers = ['greeng','erlicho','shermam1','zlatinj'];
 
 function getRepo(url){
