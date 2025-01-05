@@ -17,7 +17,8 @@ const userNameToName = {
     nadivr: 'Raviv Nadiv',
     hochmar: 'Rotem Hochman',
     renovate: 'Renovate Bot',
-    LocalizationsTeam: 'Localizations Team'
+    LocalizationsTeam: 'Localizations Team',
+    'svc-p-hmy-git': 'svc-p-hmy-git',//'svc-p-hmy-git',
 }
 
 const userNameToId = {
@@ -29,9 +30,10 @@ const userNameToId = {
     zlatinj: 'U075J4Z3K4H',//'Jonathan Zlatin',
     nadivr: 'U03FTQS4GM9',//'Raviv Nadiv',
     hochmar: 'U06J1STR33Q',//'Rotem Hochman',
+    'svc-p-hmy-git': 'svc-p-hmy-git',//'svc-p-hmy-git',
 }
 
-const serverDevelopers = ['greeng','levin','horojam','erlicho' ];
+const serverDevelopers = ['greeng','levin','horojam','erlicho','svc-p-hmy-git' ];
 const clientDevelopers = ['greeng','erlicho','shermam1','zlatinj'];
 
 function getRepo(url){
