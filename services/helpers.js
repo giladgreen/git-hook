@@ -132,11 +132,10 @@ function isOffTime(){
     console.log('## isOffTime,  currentTime:', currentTime);
    const currentHour = Number(currentTime.substring(0,2)) + 2;
     console.log('## isOffTime,  currentHour:', currentHour);
-    if (currentDay >= 5) {
+    if (currentDay >= 6) {
         console.log('## isOffTime: true - weekend.');
         return true;
     }
-
 
     if (currentHour < 8 || currentHour > 18) {
         console.log('## isOffTime: true - non working hours.');
