@@ -8,6 +8,8 @@ const DAY = 24 * HOUR;
 const BOT_ID = 'U03JV4K3M';
 
 const userNameToName = {
+    falkowp: 'Piotr falkowski',
+    koronsm: 'Marek Koronski',
     horojam: 'Michael Horojanski',
     greeng: 'Gilad Green',
     zlatinj: 'Jonathan Zlatin',
@@ -22,6 +24,8 @@ const userNameToName = {
 }
 
 const userNameToId = {
+    falkowp: 'U08BUDD2UKT',// 'Piotr falkowski',
+    koronsm: 'U08CC19GL22',// 'Marek Koronski',
     horojam: 'U080A6ZN4TW',// 'Michael Horojanski',
     greeng: 'U93GVQANN',// 'Gilad Green',
     erlicho: 'U0275G55QQ0',//'Odiya Erlichster',
@@ -34,7 +38,7 @@ const userNameToId = {
 }
 
 const serverDevelopers = ['greeng','levin','horojam','erlicho','svc-p-hmy-git' ];
-const clientDevelopers = ['greeng','erlicho','shermam1','zlatinj'];
+const clientDevelopers = ['greeng','erlicho','shermam1','zlatinj','falkowp','koronsm'];
 
 function getRepo(url){
     if (url.includes(EXTRATOR_REPO)){
