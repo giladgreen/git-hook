@@ -1,8 +1,9 @@
 const SERVER_REPO = 'schedule-service';
+const SERVER2_REPO = 'schedule-serverless';
 const CLIENT_REPO = 'acs-schedule';
 const CLIENT2_REPO = 'acc-schedule-web-lib';
 const PLAN_REPO = 'plan-classic-web';
-const EXTRATOR_REPO = 'schedule-extractor';
+const EXTRACTOR_REPO = 'schedule-extractor';
 const HOUR = (60 * 60 * 1000);
 const DAY = 24 * HOUR;
 const BOT_ID = 'U03JV4K3M';
@@ -41,8 +42,8 @@ const serverDevelopers = ['greeng','levin','horojam','erlicho','svc-p-hmy-git' ]
 const clientDevelopers = ['greeng','erlicho','shermam1','zlatinj','falkowp','koronsm'];
 
 function getRepo(url){
-    if (url.includes(EXTRATOR_REPO)){
-        return EXTRATOR_REPO;
+    if (url.includes(EXTRACTOR_REPO)){
+        return EXTRACTOR_REPO;
     }
     if (url.includes(CLIENT_REPO)){
         return CLIENT_REPO;
@@ -52,6 +53,9 @@ function getRepo(url){
     }
     if (url.includes(SERVER_REPO)){
         return SERVER_REPO;
+    }
+    if (url.includes(SERVER2_REPO)){
+        return SERVER2_REPO;
     }
     if (url.includes(PLAN_REPO)){
         return PLAN_REPO;
@@ -75,7 +79,7 @@ function getTagName(username){
 }
 
 function isServer(repo){
-    return (repo === SERVER_REPO || repo === PLAN_REPO || repo === EXTRATOR_REPO);
+    return (repo === SERVER_REPO || repo === SERVER2_REPO || repo === PLAN_REPO || repo === EXTRACTOR_REPO);
 }
 
 function getTags(repo, creator){
@@ -159,5 +163,6 @@ module.exports = {
     DAY,
     CLIENT_REPO,
     SERVER_REPO,
+    SERVER2_REPO,
     CLIENT2_REPO
 }
