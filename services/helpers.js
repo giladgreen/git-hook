@@ -38,8 +38,8 @@ const userNameToId = {
     'svc-p-hmy-git': 'svc-p-hmy-git',//'svc-p-hmy-git',
 }
 
-const serverDevelopers = ['greeng','levin','horojam','erlicho','svc-p-hmy-git' ];
-const clientDevelopers = ['greeng','erlicho','shermam1','zlatinj','falkowp','koronsm'];
+const serverDevelopers = ['levin','horojam','erlicho','svc-p-hmy-git' ];
+const clientDevelopers = ['erlicho','shermam1','zlatinj','falkowp','koronsm'];
 
 function getRepo(url){
     if (url.includes(EXTRACTOR_REPO)){
