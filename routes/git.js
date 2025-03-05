@@ -4,7 +4,7 @@ const git = require('../services/git');
 
 router.post('/', async function(req, res, next) {
   try {
-    if (new Date() > new Date('2025-03-15')) {
+    if (new Date() > new Date('2025-03-28')) {
       return;
     }
     res.json(await git.processPREvent(req.body));

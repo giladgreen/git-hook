@@ -126,6 +126,11 @@ ${title}
 ${extra ? extraInfo : ''}
 
 ${description ? description : ''}
+
+----------------------------------------------
+*Notice:*
+this bot would stop its activity on *March 29*.
+----------------------------------------------
 `;
 }
 
