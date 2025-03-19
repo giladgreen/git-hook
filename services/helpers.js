@@ -110,7 +110,7 @@ ${description}` : null;
 
 
 function getSlackMessageForNewPR(tags, prCreator, prUrl, title, description, extra) {
-const daysLeftTillMarch28 = Math.ceil((new Date('2021-03-28') - new Date()) / DAY);
+const daysLeftTillMarch28 = Math.ceil((new Date('2025-03-28') - new Date()) / DAY);
     const extraInfo = `
 ${extra ? ` * *Changed files*:${extra.changedFiles}` : ''}
 ${extra ? ` * *Lines added*: +${extra.additions}` : ''}
